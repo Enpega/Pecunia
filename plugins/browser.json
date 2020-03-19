@@ -1,0 +1,43 @@
+{
+  "prepare_queue": {
+    "installed": [],
+    "uninstalled": []
+  },
+  "config_munge": {
+    "files": {}
+  },
+  "installed_plugins": {
+    "cordova-plugin-battery-status": {
+      "PACKAGE_NAME": "mx.futureware.pecunia"
+    },
+    "cordova-plugin-media-capture": {
+      "PACKAGE_NAME": "mx.futureware.pecunia"
+    },
+    "cordova-plugin-dialogs": {
+      "PACKAGE_NAME": "mx.futureware.pecunia"
+    },
+    "cordova-plugin-geolocation": {
+      "PACKAGE_NAME": "mx.futureware.pecunia"
+    },
+    "cordova-plugin-globalization": {
+      "PACKAGE_NAME": "mx.futureware.pecunia"
+    },
+    "cordova-plugin-inappbrowser": {
+      "PACKAGE_NAME": "mx.futureware.pecunia"
+    },
+    "cordova-plugin-network-information": {
+      "PACKAGE_NAME": "mx.futureware.pecunia"
+    },
+    "cordova-plugin-vibration": {
+      "PACKAGE_NAME": "mx.futureware.pecunia"
+    }
+  },
+  "dependent_plugins": {
+    "cordova-plugin-compat": {
+      "PACKAGE_NAME": "mx.futureware.pecunia"
+    },
+    "cordova-plugin-file": {
+      "PACKAGE_NAME": "mx.futureware.pecunia"
+    }
+  }
+}

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<!--
+    Copyright (c) 2012-2016 Adobe Systems Incorporated. All rights reserved.
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+     KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+    <!-- This is a wide open CSP declaration. To lock this down for production, see below. -->
+    <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' gap:; style-src 'self' 'unsafe-inline'; media-src *" />
+    <!-- Good default declaration:
+    * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
+    * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
+    * Disables use of eval() and inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
+        * Enable inline JS: add 'unsafe-inline' to default-src
+        * Enable eval(): add 'unsafe-eval' to default-src
+    * Create your own at http://cspisawesome.com
+    -->
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: 'unsafe-inline' https://ssl.gstatic.com; style-src 'self' 'unsafe-inline'; media-src *" /> -->
+    <style type="text/css">
+        @font-face {
+            font-family: 'Questrial';
+            src: url(font/Questrial-Regular.ttf) format("truetype");
+        }
+    </style>
+    <link rel="stylesheet" type="text/css" href="css/index.css" />
+    <title>Pecunia</title>
+</head>
+
+<body>
+    <div id="divPrincipal">
+        <div id="divGap" class="estiloGap">
+        </div> <!-- gapAgregar -->
+        <div id="divBarraAgregar">
+            <table id="tblBarraAgregar" width="100%">
+                <tr>
+                    <td class="celdaBoton"><img src="img/agregar.png" height="50%" id="imgAgregar" /></td>
+                    <td class="celdaBoton"><img src="img/ojo.png" height="50%" id="imgVer" /></td>
+                    <td class="celdaBoton"><img src="img/configurar.png" height="50%" id="imgConfigurar" /></td>
+                    <td class="celdaBoton"><img src="img/info.png" height="50%" id="imgInfo" /></td>
+                </tr>
+            </table>
+        </div> <!-- divBarraAgregar -->
+        <div id="divAgregar">
+            <table id="tblAgregar" width="100%">
+                <tr><td colspan="2">&nbsp;</td></tr>
+                <tr>
+                    <td style="text-align: right; width: 40%;">Cantidad</td>
+                    <td style="width: 60%;"><input type="number" id="txtCantidad" class="campoTexto" /></td>
+                </tr>
+                <tr>
+                    <td colspan="2">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td style="text-align: right; width: 40%;">Concepto</td>
+                    <td style="width: 60%;">
+                        <select id="selConcepto" class="campoTexto" style="height: 40px;">
+                            <option value="0" selected>Seleccione...</option>
+                            <option value="1">Efectivo</option>
+                            <option value="2">Tarjeta</option>
+                            <option value="3">Aplicación</option>
+                            <option value="4">Cheque</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td style="text-align: right; width: 40%;">Fecha</td>
+                    <td style="width: 60%;"><input type="date" id="txtFecha" class="campoTexto" /></td>
+                </tr>
+                <tr>
+                    <td colspan="2">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td style="text-align: right; width: 40%;">Notas</td>
+                    <td style="width: 60%;">
+                        <textarea id="txtNotas" class="campoTexto"></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">&nbsp;</td>
+                </tr>
+            </table>
+            <table width="100%">
+                <tr>
+                    <td width="50%" style="text-align: center;"><button id="btnGuardar" class="boton botonObscuro">Guardar</button></td>
+                    <td width="50%" style="text-align: center;"><button id="btnGuardar" class="boton botonClaro">Cancelar</button></td>
+                </tr>
+            </table>
+        </div> <!-- divAgregar -->
+    </div>
+    <script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript" src="js/index.js"></script>
+    <script type="text/javascript">
+        app.initialize();
+    </script>
+</body>
+
+</html>
