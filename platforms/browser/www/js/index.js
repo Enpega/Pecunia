@@ -40,3 +40,13 @@ var app = {
         console.log('Received Event: ' + id);
     }
 };
+
+/*************** Funciones de la aplicación ****************************/
+
+function mostrarCapa(capa) {
+    $("#divAgregar").css("display","none");
+    $("#divVer").css("display","none");
+    $("#divConfigurar").css("display","none");
+    $("#divInformacion").css("display","none");
+    $("#" + capa).slideDown();
+} //mostrarCapa

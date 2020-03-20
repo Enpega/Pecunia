@@ -22,12 +22,76 @@
 <html>
 
 <head>
+
+	<script type="text/javascript">
+	
+    // the default GA code, nothing to change
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    var fields = {
+      // note: you can use a single tracking id for both the app and the website,
+      // don't worry it won't mix the data. More about this in the 3rd section
+      trackingId: 'UA-161288031-1'
+    };
+
+    // if we are in the app (the protocol will be file://)
+    if(document.URL.indexOf('http://') !== 0){
+
+          // we store and provide the clientId ourselves in localstorage since there are no
+          // cookies in Cordova
+          fields.clientId = localStorage.getItem('ga:clientId');
+          // disable GA's cookie storage functions
+          fields.storage = 'none';
+
+          ga('create', fields);
+
+          // prevent tasks that would abort tracking
+          ga('set', {
+            // don't abort if the protocol is not http(s)
+            checkProtocolTask: null,
+            // don't expect cookies to be enabled
+            checkStorageTask: null
+          });
+
+          // a callback function to get the clientId and store it ourselves
+          ga(function(tracker){
+            localStorage.setItem('ga:clientId', tracker.get('clientId'));
+          });
+
+          // send a screenview event
+          ga('send', {
+            // these are the three required properties, check GA's doc for the optional ones
+            hitType: 'screenview',
+            // you can edit these two values as you wish
+            screenName: '/index.html',
+            appName: 'Pecunia'
+          });
+    }
+    // if we are in a browser
+    else {
+
+          ga('create', fields);
+        
+          // send a pageview event
+          ga('send', {
+            // this is required, there are optional properties too if you want them
+            hitType: 'pageview'
+          });
+    }
+
+    </script>
+
+
     <meta charset="utf-8" />
     <meta name="format-detection" content="telephone=no" />
     <meta name="msapplication-tap-highlight" content="no" />
     <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
     <!-- This is a wide open CSP declaration. To lock this down for production, see below. -->
-    <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' gap:; style-src 'self' 'unsafe-inline'; media-src *" />
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' gap:; style-src 'self' 'unsafe-inline'; media-src *" /> -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: 'unsafe-inline' 'unsafe-eval' https://ssl.gstatic.com https://www.google-analytics.com;">
     <!-- Good default declaration:
     * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
     * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
@@ -48,19 +112,20 @@
 </head>
 
 <body>
-    <div id="divPrincipal">
-        <div id="divGap" class="estiloGap">
-        </div> <!-- gapAgregar -->
-        <div id="divBarraAgregar">
-            <table id="tblBarraAgregar" width="100%">
+    
+    <div id="divGap" class="estiloGap">
+    </div> <!-- gapAgregar -->
+    <div id="divBarraOpciones">
+            <table id="tblBarraOpciones" width="100%">
                 <tr>
                     <td class="celdaBoton"><img src="img/agregar.png" height="50%" id="imgAgregar" /></td>
-                    <td class="celdaBoton"><img src="img/ojo.png" height="50%" id="imgVer" /></td>
+                    <td class="celdaBoton"><img src="img/ojo.png" height="50%" id="imgVer" onclick="mostrarCapa('divVer')" /></td>
                     <td class="celdaBoton"><img src="img/configurar.png" height="50%" id="imgConfigurar" /></td>
-                    <td class="celdaBoton"><img src="img/info.png" height="50%" id="imgInfo" /></td>
+                    <td class="celdaBoton"><img src="img/info.png" height="50%" id="imgInfo" onclick="mostrarCapa('divInformacion')" /></td>
                 </tr>
             </table>
-        </div> <!-- divBarraAgregar -->
+    </div> <!-- divBarraAgregar -->
+    <div id="divPrincipal">
         <div id="divAgregar">
             <table id="tblAgregar" width="100%">
                 <tr><td colspan="2">&nbsp;</td></tr>
@@ -110,9 +175,39 @@
                 </tr>
             </table>
         </div> <!-- divAgregar -->
-    </div>
+        <div id="divVer">
+            <table id="tblVer" width="100%">
+                <thead>
+                    <tr>
+                        <td class="celdaBoton botonClaro" style="font-size: 18px;">Cantidad</td>
+                        <td class="celdaBoton botonClaro" style="font-size: 18px;">Concepto</td>
+                        <td class="celdaBoton botonClaro" style="font-size: 18px;">Fecha</td>
+                        <td class="celdaBoton botonClaro" style="font-size: 18px;">Notas</td>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div> <!-- divVer -->
+        <div id="divConfigurar">
+            <button id="btnBorrar">Borrar todos los registros</button>
+        </div> <!-- divConfigurar -->
+        <div id="divInformacion">
+            <div id="divContenidoInfo">  
+                <br />
+                <br />
+                <img src="img/logo.jpg" width="70%" height="70%" alt="Ceo Desarrollo" onclick="window.open('http://ceo-desarrollo.awardspace.info');">
+                <br />
+                <br />
+                <span class="textoTitulo"><b>Pecunia</b></span>
+                <br />
+                <br />
+                <span class="textoVersion">Versión 0.1</span>
+            </div>
+        </div> <!-- divInformacion -->
+    </div> <!-- divPrincipal -->
     <script type="text/javascript" src="cordova.js"></script>
     <script type="text/javascript" src="js/index.js"></script>
+    <script type="text/javascript" src="js/jquery.min.js"></script>
     <script type="text/javascript">
         app.initialize();
     </script>
