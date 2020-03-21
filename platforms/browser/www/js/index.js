@@ -16,6 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
+var db = null;
+
 var app = {
     // Application Constructor
     initialize: function() {
@@ -50,3 +53,30 @@ function mostrarCapa(capa) {
     $("#divInformacion").css("display","none");
     $("#" + capa).slideDown();
 } //mostrarCapa
+
+//Se inicia y/o abre la base de datos
+function iniciarBD() {
+    db = window.openDatabase("cibus.db", "1", "cibus", 2*1024*1024);
+    db.transaction(function(transaction) {
+        transaction.executeSql('CREATE TABLE IF NOT EXISTS tbl_Registro (reg_Estacion VARCHAR(50), reg_Km INT, reg_Litros INT, reg_Fecha DATE)', [], onSuccess, onError);
+    });
+    function onSuccess(tx, result) {
+        console.log("Tabla creada exitosamente");
+    }
+    function onError(tx, error) {
+        $.alert({
+            theme: "dark",
+            title:"Error", 
+            content: "Ocurrió un error al crear la base de datos",
+            type: "red",
+            typeAnimated: true,
+            buttons: {
+                Cerrar: {
+                    text: Cerrar,
+                    btnClass: red,
+                    action: function() {}
+                }
+            }
+        });
+    }
+} //iniciarBD

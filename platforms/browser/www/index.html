@@ -108,6 +108,7 @@
         }
     </style>
     <link rel="stylesheet" type="text/css" href="css/index.css" />
+    <link rel="stylesheet" type="text/css" href="css/jquery-confirm.min.css" />
     <title>Pecunia</title>
 </head>
 
@@ -120,7 +121,7 @@
                 <tr>
                     <td class="celdaBoton"><img src="img/agregar.png" height="50%" id="imgAgregar" /></td>
                     <td class="celdaBoton"><img src="img/ojo.png" height="50%" id="imgVer" onclick="mostrarCapa('divVer')" /></td>
-                    <td class="celdaBoton"><img src="img/configurar.png" height="50%" id="imgConfigurar" /></td>
+                    <td class="celdaBoton"><img src="img/configurar.png" height="50%" id="imgConfigurar" onclick="mostrarCapa('divConfigurar')" /></td>
                     <td class="celdaBoton"><img src="img/info.png" height="50%" id="imgInfo" onclick="mostrarCapa('divInformacion')" /></td>
                 </tr>
             </table>
@@ -130,14 +131,14 @@
             <table id="tblAgregar" width="100%">
                 <tr><td colspan="2">&nbsp;</td></tr>
                 <tr>
-                    <td style="text-align: right; width: 40%;">Cantidad</td>
+                    <td style="text-align: right; width: 40%;"><label for="txtCantidad">Cantidad</label></td>
                     <td style="width: 60%;"><input type="number" id="txtCantidad" class="campoTexto" /></td>
                 </tr>
                 <tr>
                     <td colspan="2">&nbsp;</td>
                 </tr>
                 <tr>
-                    <td style="text-align: right; width: 40%;">Concepto</td>
+                    <td style="text-align: right; width: 40%;"><label for="selConcepto">Concepto</label></td>
                     <td style="width: 60%;">
                         <select id="selConcepto" class="campoTexto" style="height: 40px;">
                             <option value="0" selected>Seleccione...</option>
@@ -152,14 +153,14 @@
                     <td colspan="2">&nbsp;</td>
                 </tr>
                 <tr>
-                    <td style="text-align: right; width: 40%;">Fecha</td>
+                    <td style="text-align: right; width: 40%;"><label for="txtFecha">Fecha</label></td>
                     <td style="width: 60%;"><input type="date" id="txtFecha" class="campoTexto" /></td>
                 </tr>
                 <tr>
                     <td colspan="2">&nbsp;</td>
                 </tr>
                 <tr>
-                    <td style="text-align: right; width: 40%;">Notas</td>
+                    <td style="text-align: right; width: 40%;"><label for="txtNotas">Notas</label></td>
                     <td style="width: 60%;">
                         <textarea id="txtNotas" class="campoTexto"></textarea>
                     </td>
@@ -189,7 +190,22 @@
             </table>
         </div> <!-- divVer -->
         <div id="divConfigurar">
-            <button id="btnBorrar">Borrar todos los registros</button>
+            <br /><br />
+            <label for="txtCantidadLimite">Cantidad límite por operación</label><br />
+            <input type="number" id="txtCantidadLimite" class="campoTexto" /><br /><br />
+            <div id="divAlarma" style="width: 100%; display: table;">
+                <div style="width: 45%; text-align: right; display: table-cell; vertical-align: middle;">
+                    <label class="switch">
+                        <input type="checkbox">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <div style="text-align: left; display: table-cell; vertical-align: middle;">
+                    &nbsp;<label for="chbAlarmaCantidadLimite"></label>Alarma</label>
+                </div>
+            </div>
+            <br /><br /> 
+            <button id="btnBorrar" class="boton botonObscuro">Borrar todos los registros</button>
         </div> <!-- divConfigurar -->
         <div id="divInformacion">
             <div id="divContenidoInfo">  
@@ -208,6 +224,7 @@
     <script type="text/javascript" src="cordova.js"></script>
     <script type="text/javascript" src="js/index.js"></script>
     <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="js/jquery-confirm.min.js"></script>
     <script type="text/javascript">
         app.initialize();
     </script>
