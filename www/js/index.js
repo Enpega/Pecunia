@@ -41,6 +41,17 @@ var app = {
     // Update DOM on a Received Event
     receivedEvent: function(id) {
         console.log('Received Event: ' + id);
+        $("#txtCantidadLimite").blur(function() {
+            guardarAlarmaCantidad();
+        });
+
+        $("#txtAcumuladoLimite").blur(function() {
+            guardarAlarmaAcumulado();
+        });
+
+        $("#chbAlarma").on("change", function() {
+            guardarAlarma();
+        });
     }
 };
 
@@ -52,6 +63,9 @@ function mostrarCapa(capa) {
     $("#divConfigurar").css("display","none");
     $("#divInformacion").css("display","none");
     $("#" + capa).slideDown();
+    if (capa == "divConfigurar") {
+        leerConfiguracion();
+    }
 } //mostrarCapa
 
 //Se inicia y/o abre la base de datos
@@ -80,3 +94,31 @@ function iniciarBD() {
         });
     }
 } //iniciarBD
+
+function leerConfiguracion() {
+    if (localStorage.AlarmaCantidad) {
+        $("#txtCantidadLimite").val(localStorage.AlarmaCantidad);
+    }
+    if (localStorage.AlarmaAcumulado) {
+        $("#txtAcumuladoLimite").val(localStorage.AlarmaAcumulado);
+    }
+    if (localStorage.Alarma) {
+        $("#chbAlarma").prop("checked",localStorage.Alarma);
+    }
+} //leerConfiguracion
+
+function guardarAlarmaCantidad() {
+    let inAlarmaCantidad = $("#txtCantidadLimite").val();
+    localStorage.setItem("AlarmaCantidad", inAlarmaCantidad);
+} //guardarAlarmaCantidad
+
+function guardarAlarmaAcumulado() {
+    let inAlarmaAcumulado = $("#txtAcumuladoLimite").val();
+    localStorage.setItem("AlarmaAcumulado", inAlarmaAcumulado);
+} //guardarAlarmaAcumulado
+
+function guardarAlarma() {
+    let bAlarma;
+    ($("#chbAlarma").is(':checked')) ? bAlarma = true : bAlarma = false; 
+    localStorage.setItem("Alarma", bAlarma);
+} //guardarAlarma

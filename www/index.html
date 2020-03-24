@@ -191,12 +191,16 @@
         </div> <!-- divVer -->
         <div id="divConfigurar">
             <br /><br />
-            <label for="txtCantidadLimite">Cantidad límite por operación</label><br />
-            <input type="number" id="txtCantidadLimite" class="campoTexto" /><br /><br />
+            <label for="txtCantidadLimite">Cantidad de alarma por operación</label><br />
+            <input type="number" id="txtCantidadLimite" class="campoTexto" />
+            <br /><br />
+            <label for="txtAcumuladoLimite">Cantidad de alarma por acumulado</label><br />
+            <input type="number" id="txtAcumuladoLimite" class="campoTexto" />
+            <br /><br />
             <div id="divAlarma" style="width: 100%; display: table;">
                 <div style="width: 45%; text-align: right; display: table-cell; vertical-align: middle;">
                     <label class="switch">
-                        <input type="checkbox">
+                        <input type="checkbox" id="chbAlarma">
                         <span class="slider round"></span>
                     </label>
                 </div>
@@ -204,7 +208,7 @@
                     &nbsp;<label for="chbAlarmaCantidadLimite"></label>Alarma</label>
                 </div>
             </div>
-            <br /><br /> 
+            <br />
             <button id="btnBorrar" class="boton botonObscuro">Borrar todos los registros</button>
         </div> <!-- divConfigurar -->
         <div id="divInformacion">
