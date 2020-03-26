@@ -168,6 +168,17 @@ h1 {
     font-size: 5vw;
 }
 
+.campoTextoError {
+    background-color: white;
+    border: 1px solid red;
+    border-radius: 5px;
+    color: #444444;
+    padding: 8px 16px;
+    height: 30px;
+    box-shadow: none;
+    font-size: 5vw;
+}
+
 .textoTitulo {
     font-size: 28px;
     color: white;

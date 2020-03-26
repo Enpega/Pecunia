@@ -41,6 +41,9 @@ var app = {
     // Update DOM on a Received Event
     receivedEvent: function(id) {
         console.log('Received Event: ' + id);
+
+        iniciarBD();
+
         $("#txtCantidadLimite").blur(function() {
             guardarAlarmaCantidad();
         });
@@ -51,6 +54,10 @@ var app = {
 
         $("#chbAlarma").on("change", function() {
             guardarAlarma();
+        });
+
+        $("#btnGuardar").on("click", function() {
+            guardarRegistro();
         });
     }
 };
@@ -70,28 +77,15 @@ function mostrarCapa(capa) {
 
 //Se inicia y/o abre la base de datos
 function iniciarBD() {
-    db = window.openDatabase("cibus.db", "1", "cibus", 2*1024*1024);
+    db = window.openDatabase("pecunia.db", "1", "precunia", 2*1024*1024);
     db.transaction(function(transaction) {
-        transaction.executeSql('CREATE TABLE IF NOT EXISTS tbl_Registro (reg_Estacion VARCHAR(50), reg_Km INT, reg_Litros INT, reg_Fecha DATE)', [], onSuccess, onError);
+        transaction.executeSql('CREATE TABLE IF NOT EXISTS tbl_Movimientos (mov_Cantidad DECIMAL(15, 2), mov_Fecha DATE, mov_Concepto VARCHAR(20), mov_Notas VARCHAR(255))', [], onSuccess, onError);
     });
     function onSuccess(tx, result) {
         console.log("Tabla creada exitosamente");
     }
     function onError(tx, error) {
-        $.alert({
-            theme: "dark",
-            title:"Error", 
-            content: "Ocurrió un error al crear la base de datos",
-            type: "red",
-            typeAnimated: true,
-            buttons: {
-                Cerrar: {
-                    text: Cerrar,
-                    btnClass: red,
-                    action: function() {}
-                }
-            }
-        });
+        alerta("", "Ocurrió un error al crear la base de datos", "red");
     }
 } //iniciarBD
 
@@ -122,3 +116,80 @@ function guardarAlarma() {
     ($("#chbAlarma").is(':checked')) ? bAlarma = true : bAlarma = false; 
     localStorage.setItem("Alarma", bAlarma);
 } //guardarAlarma
+
+function guardarRegistro() {
+    if ($("#txtCantidad").val() > localStorage.AlarmaCantidad) {
+        alerta("", "Esta cantidad excede el límite", "yellow");
+        return;
+    }
+
+    var bTodo = true;
+    if (($("#txtCantidad").val()=="")) {
+        $("#txtCantidad").removeClass("campoTexto");
+        $("#txtCantidad").addClass("campoTextoError");
+        bTodo = false;
+    }
+    else {
+        $("#txtCantidad").removeClass("campoTextoError");
+        $("#txtCantidad").addClass("campoTexto");
+    }
+    
+    if (($("#txtFecha").val()=="")) {
+        $("#txtFecha").removeClass("campoTexto");
+        $("#txtFecha").addClass("campoTextoError");
+        bTodo = false;
+    }
+    else {
+        $("#txtFecha").removeClass("campoTextoError");
+        $("#txtFecha").addClass("campoTexto");
+    }
+    
+     if ($("#selConcepto").children("option:selected").val()==0) {
+        $("#selConcepto").removeClass("campoTexto");
+        $("#selConcepto").addClass("campoTextoError");
+        bTodo = false;
+    }
+    else {
+        $("#selConcepto").removeClass("campoTextoError");
+        $("#selConcepto").addClass("campoTexto");
+    }
+    
+    if (bTodo) {
+        let inCantidad = $("#txtCantidad").val();
+        let stFecha = $("#txtFecha").val();
+        let stConcepto = $("#selConcepto").children("option:selected").val();
+        let stNotas = $.trim($("#txtNotas").val());
+        db.transaction(function(tx) {
+            var executeQuery = "INSERT INTO tbl_Movimientos VALUES (?,?,?,?)";
+            tx.executeSql(executeQuery, [inCantidad, stFecha, stConcepto, stNotas], onSuccess, onError);
+        });
+        function onSuccess(tx, result) {
+                alerta("Aviso", "INformación guardada", "blue");
+                //Reinicio de los campos
+                $("#txtCantidad").val("");
+                $("#textFecha").val("");
+                $("#selConcepto").val(0);
+                $("#txtNotas").val("");
+        }
+        function onError(tx, error){
+            alerta("", 'Ocurrió un error al intentar registrar' + error.message, "red");
+        }
+    }    
+} //guardarRegistro
+
+function alerta(titulo,mensaje,color) {
+    $.alert({
+        theme: "dark",
+        title: titulo, 
+        content: mensaje,
+        type: color,
+        typeAnimated: true,
+        buttons: {
+            Cerrar: {
+                text: "Cerrar",
+                btnClass: "btn-red",
+                action: function() {}
+            }
+        }
+    });
+} //alerta
