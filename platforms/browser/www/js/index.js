@@ -73,6 +73,9 @@ function mostrarCapa(capa) {
     if (capa == "divConfigurar") {
         leerConfiguracion();
     }
+    if (capa == "divVer") {
+        consultar();
+    }
 } //mostrarCapa
 
 //Se inicia y/o abre la base de datos
@@ -193,3 +196,33 @@ function alerta(titulo,mensaje,color) {
         }
     });
 } //alerta
+
+function consultar() {
+    //Se borran los renglones de la tabla para volverla a llenar
+    //$("#tblVer").find("tr:gt(0)").remove();
+    $("#tblVer").html("");
+    //mostrarCapa("consultar");
+    var html = "";
+    var inAcumulado = 0;
+    db.transaction(function (transaction) {
+        transaction.executeSql('SELECT * FROM tbl_Movimientos ORDER BY mov_Fecha', [], onSuccess, onError);
+    });
+
+    function onSuccess(transaction, data) {
+        for (i = 0; i < data.rows.length; i++) {
+            html += "<tr><td class='celdaBoton' style='border: 1px solid whitesmoke;'><span class='textoTabla'>" + data.rows.item(i).mov_Cantidad + "</span></td>";
+            html += "<td class='celdaBoton' style='border: 1px solid whitesmoke;'><span class='textoTabla'>" + data.rows.item(i).mov_Concepto + "</span></td>";
+            html += "<td class='celdaBoton' style='border: 1px solid whitesmoke;'><span class='textoTabla'>" + data.rows.item(i).mov_Fecha + "</span></td>";
+            html += "<td class='celdaBoton' style='border: 1px solid whitesmoke;'><span class='textoTabla'>" +  data.rows.item(i).mov_Notas + "</span></td>";
+            inAcumulado += data.rows.item(i).mov_Cantidad;
+            if (inAcumulado > localStorage.AlarmaAcumulado) {
+                alerta("", "Se excedió el límite acumulado", "red")
+            }
+        };
+        $('#tblVer').append(html);
+    }
+
+    function onError(tx, error) {
+        alerta("", "Ocurrió un error al leer la información", "red");
+    }
+} //consultar
