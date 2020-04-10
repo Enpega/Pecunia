@@ -3,7 +3,7 @@
   "display": "standalone",
   "name": "Pecunia",
   "short_name": "Pecunia",
-  "version": "mx.ceo-desarrollo.pecunia",
+  "version": "com.ceodesarrollo.pecunia",
   "description": "Aplicación sencilla para el registro de gastos efectuados.",
   "author": "PhoneGap Team",
   "icons": [],
