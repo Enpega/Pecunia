@@ -15,14 +15,7 @@
     },
     "cordova-plugin-globalization": {
       "PACKAGE_NAME": "mx.ceo-desarrollo.pecunia"
-    },
-    "cordova-plugin-file": {
-      "PACKAGE_NAME": "mx.ceo-desarrollo.pecunia"
     }
   },
-  "dependent_plugins": {
-    "cordova-plugin-compat": {
-      "PACKAGE_NAME": "mx.ceo-desarrollo.pecunia"
-    }
-  }
+  "dependent_plugins": {}
 }

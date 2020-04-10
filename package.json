@@ -9,7 +9,6 @@
     "plugins": {
       "cordova-plugin-device": {},
       "cordova-plugin-dialogs": {},
-      "cordova-plugin-file": {},
       "cordova-plugin-globalization": {},
       "cordova-plugin-splashscreen": {}
     },
