@@ -6,6 +6,12 @@
   "version": "com.ceodesarrollo.pecunia",
   "description": "Aplicación sencilla para el registro de gastos efectuados.",
   "author": "PhoneGap Team",
-  "icons": [],
+  "icons": [
+    {
+      "src": "img/cash.png",
+      "type": "image/png",
+      "sizes": "undefinedxundefined"
+    }
+  ],
   "start_url": "index.html"
 }

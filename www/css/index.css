@@ -161,7 +161,7 @@ h1 {
     border: 1px solid #DDDDDD;
     border-radius: 5px;
     color: #444444;
-    padding: 8px 16px;
+    /* padding: 8px 16px; */
     height: 30px;
     box-shadow: none;
     font-size: 5vw;
@@ -255,11 +255,12 @@ input:checked + .slider:before {
 
 #divBarraOpciones {
     height: 13vh;
+    display: block;
 }
 
 /* Estilos capas */
 #divPrincipal {
-    height: 100vh;
+    height: calc(100vh - 18vh);
     width: 100vw;
     background-color: #333333;
     position: absolute;

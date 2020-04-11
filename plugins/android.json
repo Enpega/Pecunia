@@ -15,11 +15,13 @@
     },
     "cordova-plugin-globalization": {
       "PACKAGE_NAME": "com.ceodesarrollo.pecunia"
-    }
-  },
-  "dependent_plugins": {
+    },
     "cordova-plugin-splashscreen": {
       "PACKAGE_NAME": "com.ceodesarrollo.pecunia"
+    },
+    "cordova-plugin-whitelist": {
+      "PACKAGE_NAME": "com.ceodesarrollo.pecunia"
     }
-  }
+  },
+  "dependent_plugins": {}
 }
