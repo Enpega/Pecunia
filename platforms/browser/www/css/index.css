@@ -249,13 +249,13 @@ input:checked + .slider:before {
 
 #divGap {
     height: 5vh;
-    display: block;
+    display: none;
     background-color: #333333;
 }
 
 #divBarraOpciones {
     height: 13vh;
-    display: block;
+    display: none;
 }
 
 /* Estilos capas */
@@ -264,7 +264,7 @@ input:checked + .slider:before {
     width: 100vw;
     background-color: #333333;
     position: absolute;
-    display: block;
+    display: none;
     z-index: 1;
 }
 
@@ -306,3 +306,14 @@ input:checked + .slider:before {
     vertical-align: middle;
     display: none;
 }
+
+#divSplash {
+    z-index: 90;
+    width: 100vw;
+    height: 100vh;
+    background-image: url("../img/splash.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+}   

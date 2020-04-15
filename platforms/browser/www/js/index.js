@@ -59,10 +59,33 @@ var app = {
         $("#btnGuardar").on("click", function() {
             guardarRegistro();
         });
+
+        document.addEventListener("pause", function(){mostrarSplash()}, false);
+        document.addEventListener("resume", function(){cerrarSplash()}, false);
+
+        /* setTimeout(function() { cerrarSplash() }, 3000); */
+
+        cerrarSplash()
     }
 };
 
 /*************** Funciones de la aplicación ****************************/
+
+function cerrarSplash() {
+    setTimeout(function() {
+        $("#divSplash").css("display","none");
+        $("#divGap").slideDown();
+        $("#divBarraOpciones").slideDown();
+        $("#divPrincipal").slideDown();
+    }, 2000);
+} //cerrarSplash
+
+function mostrarSplash() {
+    $("#divGap").css("display","none");
+    $("#divBarraOpciones").css("display","none");
+    $("#divPrincipal").css("display","none");
+    $("#divSplash").css("display","block");
+} //mostrarSplash
 
 function mostrarCapa(capa) {
     $("#divAgregar").css("display","none");

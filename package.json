@@ -9,7 +9,6 @@
       "cordova-plugin-device": {},
       "cordova-plugin-dialogs": {},
       "cordova-plugin-globalization": {},
-      "cordova-plugin-splashscreen": {},
       "cordova-plugin-whitelist": {}
     },
     "platforms": [
@@ -20,7 +19,6 @@
   "dependencies": {
     "cordova-android": "8.1.0",
     "cordova-browser": "^6.0.0",
-    "cordova-plugin-splashscreen": "git+https://github.com/apache/cordova-plugin-splashscreen.git#5.0.3",
     "cordova-plugin-whitelist": "1.3.4"
   }
 }

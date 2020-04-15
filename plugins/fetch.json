@@ -31,14 +31,6 @@
     "is_top_level": true,
     "variables": {}
   },
-  "cordova-plugin-splashscreen": {
-    "source": {
-      "type": "registry",
-      "id": "https://github.com/apache/cordova-plugin-splashscreen.git#5.0.3"
-    },
-    "is_top_level": true,
-    "variables": {}
-  },
   "cordova-plugin-whitelist": {
     "source": {
       "type": "registry",
