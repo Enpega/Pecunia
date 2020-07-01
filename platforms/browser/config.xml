@@ -19,4 +19,6 @@
     <allow-intent href="geo:*" />
     <preference name="DisallowOverscroll" value="true" />
     <preference name="android-minSdkVersion" value="16" />
+    <preference name="SplashScreenDelay" value="4000" />
+    <preference name="ShowSplashScreenSpinner" value="false" />
 </widget>

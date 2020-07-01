@@ -1,24 +1,27 @@
 {
-  "prepare_queue": {
-    "installed": [],
-    "uninstalled": []
-  },
-  "config_munge": {
-    "files": {}
-  },
-  "installed_plugins": {
-    "cordova-plugin-device": {
-      "PACKAGE_NAME": "mx.ceo-desarrollo.pecunia"
+    "prepare_queue": {
+        "installed": [],
+        "uninstalled": []
     },
-    "cordova-plugin-dialogs": {
-      "PACKAGE_NAME": "mx.ceo-desarrollo.pecunia"
+    "config_munge": {
+        "files": {}
     },
-    "cordova-plugin-globalization": {
-      "PACKAGE_NAME": "mx.ceo-desarrollo.pecunia"
+    "installed_plugins": {
+        "cordova-plugin-device": {
+            "PACKAGE_NAME": "mx.ceo-desarrollo.pecunia"
+        },
+        "cordova-plugin-dialogs": {
+            "PACKAGE_NAME": "mx.ceo-desarrollo.pecunia"
+        },
+        "cordova-plugin-globalization": {
+            "PACKAGE_NAME": "mx.ceo-desarrollo.pecunia"
+        },
+        "cordova-plugin-whitelist": {
+            "PACKAGE_NAME": "com.ceodesarrollo.pecunia"
+        },
+        "cordova-plugin-splashscreen": {
+            "PACKAGE_NAME": "com.ceodesarrollo.pecunia"
+        }
     },
-    "cordova-plugin-whitelist": {
-      "PACKAGE_NAME": "com.ceodesarrollo.pecunia"
-    }
-  },
-  "dependent_plugins": {}
+    "dependent_plugins": {}
 }

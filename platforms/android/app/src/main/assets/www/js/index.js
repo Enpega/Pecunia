@@ -60,18 +60,18 @@ var app = {
             guardarRegistro();
         });
 
-        document.addEventListener("pause", function(){mostrarSplash()}, false);
+        /* document.addEventListener("pause", function(){mostrarSplash()}, false);
         document.addEventListener("resume", function(){cerrarSplash()}, false);
 
-        /* setTimeout(function() { cerrarSplash() }, 3000); */
+        setTimeout(function() { cerrarSplash() }, 3000); */
 
-        cerrarSplash()
+        //cerrarSplash()
     }
 };
 
 /*************** Funciones de la aplicación ****************************/
 
-function cerrarSplash() {
+/* function cerrarSplash() {
     setTimeout(function() {
         $("#divSplash").css("display","none");
         $("#divGap").slideDown();
@@ -85,7 +85,7 @@ function mostrarSplash() {
     $("#divBarraOpciones").css("display","none");
     $("#divPrincipal").css("display","none");
     $("#divSplash").css("display","block");
-} //mostrarSplash
+} //mostrarSplash */
 
 function mostrarCapa(capa) {
     $("#divAgregar").css("display","none");
@@ -190,7 +190,7 @@ function guardarRegistro() {
             tx.executeSql(executeQuery, [inCantidad, stFecha, stConcepto, stNotas], onSuccess, onError);
         });
         function onSuccess(tx, result) {
-                alerta("Aviso", "INformación guardada", "blue");
+                alerta("Aviso", "Información guardada", "blue");
                 //Reinicio de los campos
                 $("#txtCantidad").val("");
                 $("#textFecha").val("");

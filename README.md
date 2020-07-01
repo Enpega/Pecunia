@@ -7,10 +7,13 @@ Aplicación sencilla para llevar registro de gastos efectuados.
 #### Registro
 
 Una interfaz sencilla para registrar la información más significativa de un gasto.
+Sin configuraciones complicadas, captura y revisión simples.
 
 #### Consulta
 
 Tabla informativa con los registros almacenados para una rápida consulta.
+Reciba un aviso cuando está realizando un gasto mayor a lo programado, e igualmente si el acumulado rebasa lo establecido.
+Todo el registro de sus gastos en una sola pantalla, presentados de forma clara y concisa.
 
 #### Configuración
 
