@@ -144,7 +144,7 @@ function guardarAlarma() {
 } //guardarAlarma
 
 function guardarRegistro() {
-    if ($("#txtCantidad").val() > localStorage.AlarmaCantidad) {
+    if (parseFloat($("#txtCantidad").val()) > parseFloat(localStorage.AlarmaCantidad)) {
         alerta("", "Esta cantidad excede el límite", "yellow");
         return;
     }
