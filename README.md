@@ -26,8 +26,3 @@ Icon made by [freepik][freepik-url] from [www.flaticon.com][flaticon-url]
 
 [freepik-url]: https://www.freepik.com
 [flaticon-url]: https://www.flaticon.com
-
-Estilos Holo:
-Realizado por [NativeDroid][nativedroid-url]
-
-[nativedroid-url]: http://nativedroid.godesign.ch
