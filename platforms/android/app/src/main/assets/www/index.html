@@ -180,19 +180,11 @@
             </table>
         </div> <!-- divAgregar -->
         <div id="divVer">
-            <div id="divVerEncabezado">
-                <table id="tblVerEncabezado" width="100%">
-                    <tr>
-                        <td class="celdaBoton botonClaro" style="font-size: 18px;">Cantidad</td>
-                        <td class="celdaBoton botonClaro" style="font-size: 18px;">Concepto</td>
-                        <td class="celdaBoton botonClaro" style="font-size: 18px;">Fecha</td>
-                        <td class="celdaBoton botonClaro" style="font-size: 18px;">Notas</td>
-                    </tr>
-                </table>
-            </div>
-            <div id="divVerTabla">
-                <table id="tblVer" width="100%"></table>
-            </div>
+            <label for="txtBuscar">Buscar</label>
+            <input type="text" id="txtBuscar" class="campoTexto" style="width: 60%;" />
+            <ul id="lstRegistros">
+                <span class="empty-item">Sin resultados</span>                 
+            </ul>
         </div> <!-- divVer -->
         <div id="divConfigurar">
             <br /><br />
@@ -226,14 +218,14 @@
                 <span class="textoTitulo"><b>Pecunia</b></span>
                 <br />
                 <br />
-                <span class="textoVersion">Versión 0.1</span>
+                <span class="textoVersion">Versión 2.0</span>
             </div>
         </div> <!-- divInformacion -->
     </div> <!-- divPrincipal -->
     <!--<div id="divSplash"></div>  divSplash -->
     <script type="text/javascript" src="cordova.js"></script>
     <script type="text/javascript" src="js/index.js"></script>
-    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="js/jquery-3.5.1.min.js"></script>
     <script type="text/javascript" src="js/jquery-confirm.min.js"></script>
     <script type="text/javascript">
         app.initialize();

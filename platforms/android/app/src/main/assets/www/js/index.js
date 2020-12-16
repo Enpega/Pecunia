@@ -249,3 +249,50 @@ function consultar() {
         alerta("", "Ocurrió un error al leer la información", "red");
     }
 } //consultar
+
+/***************  Funciones para la operación de la lista de registros *******************/
+
+var inCuentaLista = $('#lstRegistros .in').length;
+$('.cuenta-lista').text(inCuentaLista + ' items');
+
+$("#search-text").keyup(function () {
+    //$(this).addClass('hidden');
+    var searchTerm = $("#search-text").val();
+    var listItem = $('#lstRegistros').children('li');
+    var searchSplit = searchTerm.replace(/ /g, "'):containsi('")
+    //extends :contains to be case insensitive
+    $.extend($.expr[':'], {
+         'containsi': function(elem, i, match, array)
+         {
+             return (elem.textContent || elem.innerText || '').toLowerCase().indexOf((match[3] || "").toLowerCase()) >= 0;
+         }
+    });
+   
+   
+    $("#lstRegistros li").not(":containsi('" + searchSplit + "')").each(function(e)   {
+      $(this).addClass('hiding out').removeClass('in');
+      setTimeout(function() {
+          $('.out').addClass('hidden');
+        }, 300);
+    });
+   
+    $("#lstRegistros li:containsi('" + searchSplit + "')").each(function(e) {
+      $(this).removeClass('hidden out').addClass('in');
+      setTimeout(function() {
+          $('.in').removeClass('hiding');
+        }, 1);
+    });
+   
+ 
+    var inCuentaLista = $('#lstRegistros .in').length;
+    $('.cuenta-lista').text(inCuentaLista + ' items');
+   
+   //shows empty state text when no jobs found
+    if(inCuentaLista == '0') {
+      $('#lstRegistros').addClass('empty');
+    }
+    else {
+      $('#lstRegistros').removeClass('empty');
+    }
+   
+ });
