@@ -53,7 +53,20 @@ var app = {
         });
 
         $("#chbAlarma").on("change", function() {
-            guardarAlarma();
+            if ($("#chbAlarma").prop("checked") === true) {
+                if ($("#txtCantidadLimite").val() == "") {
+                    $("#txtCantidadLimite").val("0");
+                }
+                if ($("#txtAcumuladoLimite").val() == "") {
+                    $("#txtAcumuladoLimite").val("0");
+                }
+                if (($("#txtCantidadLimite").val() == "0") && ($("#txtAcumuladoLimite").val() == "0")) {
+                    $("#chbAlarma").prop("checked",false)
+                    alerta("Aviso","No se puede activar la alarma porque no hay ningún límite establecido", "orange");
+                    return;
+                }             
+            }
+            guardarAlarma(); 
         });
 
         $("#btnGuardar").on("click", function() {
@@ -68,6 +81,10 @@ var app = {
         //cerrarSplash()
     }
 };
+
+//Definición de variables y constantes
+let arrConceptos = ["Efectivo", "Tarjeta", "Aplicación", "Cheque"];
+let arrColores   = ["red", "green", "blue", "yellow"];
 
 /*************** Funciones de la aplicación ****************************/
 
@@ -123,7 +140,7 @@ function leerConfiguracion() {
         $("#txtAcumuladoLimite").val(localStorage.AlarmaAcumulado);
     }
     if (localStorage.Alarma) {
-        $("#chbAlarma").prop("checked",localStorage.Alarma);
+        $("#chbAlarma").prop("checked",(localStorage.Alarma == "true"));
     }
 } //leerConfiguracion
 
@@ -223,26 +240,30 @@ function alerta(titulo,mensaje,color) {
 function consultar() {
     //Se borran los renglones de la tabla para volverla a llenar
     //$("#tblVer").find("tr:gt(0)").remove();
-    $("#tblVer").html("");
+    //$("#tblVer").html("");
     //mostrarCapa("consultar");
-    var html = "";
+    //var html = "";
+    $("#lstRegistros").empty();
+    contarRegistros();
     var inAcumulado = 0;
     db.transaction(function (transaction) {
         transaction.executeSql('SELECT * FROM tbl_Movimientos ORDER BY mov_Fecha', [], onSuccess, onError);
     });
 
     function onSuccess(transaction, data) {
-        for (i = 0; i < data.rows.length; i++) {
-            html += "<tr><td class='celdaBoton' style='border: 1px solid whitesmoke;'><span class='textoTabla'>" + data.rows.item(i).mov_Cantidad + "</span></td>";
-            html += "<td class='celdaBoton' style='border: 1px solid whitesmoke;'><span class='textoTabla'>" + data.rows.item(i).mov_Concepto + "</span></td>";
-            html += "<td class='celdaBoton' style='border: 1px solid whitesmoke;'><span class='textoTabla'>" + data.rows.item(i).mov_Fecha + "</span></td>";
-            html += "<td class='celdaBoton' style='border: 1px solid whitesmoke;'><span class='textoTabla'>" +  data.rows.item(i).mov_Notas + "</span></td>";
-            inAcumulado += data.rows.item(i).mov_Cantidad;
-            if (inAcumulado > localStorage.AlarmaAcumulado) {
-                alerta("", "Se excedió el límite acumulado", "red")
-            }
-        };
-        $('#tblVer').append(html);
+        if (data.rows.length > 0) {
+            for (i = 0; i < data.rows.length; i++) {
+                $("#lstRegistros").append(`<li id='registro${i}'>` + arrConceptos[data.rows.item(i).mov_Concepto-1] + "<br />" + data.rows.item(i).mov_Fecha + "     " + ((data.rows.item(i).mov_Cantidad).toFixed(2)).toString().padEnd(210,"&nbsp;") + "<img src='img/post-it.png' height='auto' width='10%' onclick='navigator.notification.alert(\"" + data.rows.item(i).mov_Notas + "\")' /></li>");
+                $(`#registro${i}`).css("border-left-color",`${arrColores[data.rows.item(i).mov_Concepto-1]}`);
+                inAcumulado += data.rows.item(i).mov_Cantidad;
+                if (inAcumulado > localStorage.AlarmaAcumulado) {
+                    alerta("", "Se excedió el límite acumulado", "red")
+                }
+            };
+        }
+        else {
+            $(".empty-item").css("display", "block");
+        }
     }
 
     function onError(tx, error) {
@@ -251,48 +272,7 @@ function consultar() {
 } //consultar
 
 /***************  Funciones para la operación de la lista de registros *******************/
-
-var inCuentaLista = $('#lstRegistros .in').length;
-$('.cuenta-lista').text(inCuentaLista + ' items');
-
-$("#search-text").keyup(function () {
-    //$(this).addClass('hidden');
-    var searchTerm = $("#search-text").val();
-    var listItem = $('#lstRegistros').children('li');
-    var searchSplit = searchTerm.replace(/ /g, "'):containsi('")
-    //extends :contains to be case insensitive
-    $.extend($.expr[':'], {
-         'containsi': function(elem, i, match, array)
-         {
-             return (elem.textContent || elem.innerText || '').toLowerCase().indexOf((match[3] || "").toLowerCase()) >= 0;
-         }
-    });
-   
-   
-    $("#lstRegistros li").not(":containsi('" + searchSplit + "')").each(function(e)   {
-      $(this).addClass('hiding out').removeClass('in');
-      setTimeout(function() {
-          $('.out').addClass('hidden');
-        }, 300);
-    });
-   
-    $("#lstRegistros li:containsi('" + searchSplit + "')").each(function(e) {
-      $(this).removeClass('hidden out').addClass('in');
-      setTimeout(function() {
-          $('.in').removeClass('hiding');
-        }, 1);
-    });
-   
- 
+function contarRegistros() {
     var inCuentaLista = $('#lstRegistros .in').length;
     $('.cuenta-lista').text(inCuentaLista + ' items');
-   
-   //shows empty state text when no jobs found
-    if(inCuentaLista == '0') {
-      $('#lstRegistros').addClass('empty');
-    }
-    else {
-      $('#lstRegistros').removeClass('empty');
-    }
-   
- });
+} //contarRegistros
