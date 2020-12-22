@@ -73,6 +73,9 @@ var app = {
             guardarRegistro();
         });
 
+        $("#txtBuscar").on("keyup", function() {
+            ($("#txtBuscar").val() !== "") ? buscar() : consultar();
+        });
         /* document.addEventListener("pause", function(){mostrarSplash()}, false);
         document.addEventListener("resume", function(){cerrarSplash()}, false);
 
@@ -84,7 +87,7 @@ var app = {
 
 //Definición de variables y constantes
 let arrConceptos = ["Efectivo", "Tarjeta", "Aplicación", "Cheque"];
-let arrColores   = ["red", "green", "blue", "yellow"];
+let arrColores   = ["#db413b", "#44c767", "#5b94d9", "#f2ec3f"]; //rojo verde azul amarillo
 
 /*************** Funciones de la aplicación ****************************/
 
@@ -276,3 +279,29 @@ function contarRegistros() {
     var inCuentaLista = $('#lstRegistros .in').length;
     $('.cuenta-lista').text(inCuentaLista + ' items');
 } //contarRegistros
+
+function buscar() {
+    $("#lstRegistros").empty();
+    contarRegistros();
+    let stParcial = $("#txtBuscar").val();
+    db.transaction(function (transaction) {
+        transaction.executeSql(`SELECT * FROM tbl_Movimientos WHERE mov_Notas LIKE '%${stParcial}%' ORDER BY mov_Fecha`, [], onSuccess, onError);
+    });
+
+    function onSuccess(transaction, data) {
+        if (data.rows.length > 0) {
+            for (i = 0; i < data.rows.length; i++) {
+                $("#lstRegistros").append(`<li id='registro${i}'>` + arrConceptos[data.rows.item(i).mov_Concepto-1] + "<br />" + data.rows.item(i).mov_Fecha + "     " + ((data.rows.item(i).mov_Cantidad).toFixed(2)).toString().padEnd(210,"&nbsp;") + "<img src='img/post-it.png' height='auto' width='10%' onclick='navigator.notification.alert(\"" + data.rows.item(i).mov_Notas + "\")' /></li>");
+                $(`#registro${i}`).css("border-left-color",`${arrColores[data.rows.item(i).mov_Concepto-1]}`);
+                inAcumulado += data.rows.item(i).mov_Cantidad;
+            };
+        }
+        else {
+            $(".empty-item").css("display", "block");
+        }
+    }
+
+    function onError(tx, error) {
+        alerta("", "Ocurrió un error al leer la información", "red");
+    }
+} //buscar

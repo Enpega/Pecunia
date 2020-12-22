@@ -180,8 +180,19 @@
             </table>
         </div> <!-- divAgregar -->
         <div id="divVer">
-            <label for="txtBuscar">Buscar</label>
-            <input type="text" id="txtBuscar" class="campoTexto" style="width: 60%;" />
+            <br />
+            <div style="text-align: center; width: 100%;">
+                <label for="txtBuscar">Buscar</label>
+                <input type="text" id="txtBuscar" class="campoTexto" style="width: 60%;" />
+            </div>    
+            <br />
+            <div style="text-align: center; width: 100%;">
+                Filtrar:
+                <button id="btnEfectivo" class="botonFiltro">Efectivo</button>
+                <button id="btnTarjeta" class="botonFiltro">Tarjeta</button>
+                <button id="btnAplicacion" class="botonFiltro">Aplicación</button>
+                <button id="btnCheque" class="botonFiltro">Cheque</button>
+            </div>
             <ul id="lstRegistros">
                 <span class="empty-item" style="display: none;">Sin resultados</span>                 
             </ul>

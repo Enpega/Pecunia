@@ -276,7 +276,8 @@ input:checked + .slider:before {
 
 #divVer {
     width: 100vw;
-    height: 80vh;  
+    height: 80vh; 
+    overflow-y: scroll; 
     display: none;
     z-index: 3;
 }
@@ -305,6 +306,44 @@ input:checked + .slider:before {
     text-align: center;
     vertical-align: middle;
     display: none;
+}
+
+/****************************** Estilos para los botones de filtro *********************************/
+
+.botonFiltro {
+	border-radius:5px;
+	display:inline-block;
+	color:#000000;
+	font-family:Questrial;
+	font-size:13px;
+    padding:6px 0px;
+    width: 66px;
+    text-decoration:none;
+    text-align: center;
+}
+
+#btnEfectivo {
+    background:linear-gradient(to bottom, #db413b 5%, #d92c25 100%);
+    background-color:#db413b;
+    border:1px solid #b5231d;
+}
+
+#btnTarjeta {
+    background:linear-gradient(to bottom, #44c767 5%, #5cbf2a 100%);
+    background-color:#44c767;
+    border:1px solid #18ab29;
+}
+
+#btnAplicacion {
+    background:linear-gradient(to bottom, #5b94d9 5%, #3e83d6 100%);
+    background-color:#5b94d9;
+    border:1px solid #316bb0;
+}
+
+#btnCheque {
+    background:linear-gradient(to bottom, #f2ec3f 5%, #ccc733 100%);
+    background-color:#f2ec3f;
+    border:1px solid #bab523;
 }
 
 /****************************** Estilos para la lista de consulta **********************************/
