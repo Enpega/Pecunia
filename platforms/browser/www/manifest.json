@@ -5,7 +5,7 @@
   "short_name": "Pecunia",
   "version": "com.ceodesarrollo.pecunia",
   "description": "Aplicación sencilla para el registro de gastos efectuados.",
-  "author": "PhoneGap Team",
+  "author": "Enrique Pérez Garibay",
   "icons": [
     {
       "src": "img/cash.png",

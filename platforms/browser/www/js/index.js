@@ -73,8 +73,32 @@ var app = {
             guardarRegistro();
         });
 
+        $("#btnCancelar").on("click", function() {
+            limpiarCampos();
+        });
+
+        $(".barra-separacion").on("click", function() {
+            mostrarCapa("div" + $(this).attr("id")); 
+        });
+
+        $("#btnEfectivo").on("click", function() {
+            consultar(1);
+        });
+
+        $("#btnTarjeta").on("click", function() {
+            consultar(2);
+        });
+
+        $("#btnAplicacion").on("click", function() {
+            consultar(3);
+        });
+
+        $("#btnCheque").on("click", function() {
+            consultar(4);
+        });
+
         $("#txtBuscar").on("keyup", function() {
-            ($("#txtBuscar").val() !== "") ? buscar() : consultar();
+            ($("#txtBuscar").val() !== "") ? buscar() : consultar(0);
         });
         /* document.addEventListener("pause", function(){mostrarSplash()}, false);
         document.addEventListener("resume", function(){cerrarSplash()}, false);
@@ -87,7 +111,7 @@ var app = {
 
 //Definición de variables y constantes
 let arrConceptos = ["Efectivo", "Tarjeta", "Aplicación", "Cheque"];
-let arrColores   = ["#db413b", "#44c767", "#5b94d9", "#f2ec3f"]; //rojo verde azul amarillo
+let arrColores   = ["#FF3636", "#18ce0f", "#2CA8FF", "#FFB236"]; //rojo verde azul amarillo
 
 /*************** Funciones de la aplicación ****************************/
 
@@ -117,7 +141,7 @@ function mostrarCapa(capa) {
         leerConfiguracion();
     }
     if (capa == "divVer") {
-        consultar();
+        consultar(0);
     }
 } //mostrarCapa
 
@@ -223,6 +247,13 @@ function guardarRegistro() {
     }    
 } //guardarRegistro
 
+function limpiarCampos() {
+    $("$txtCantidad").val("");
+    $("#selConcepto").val(0);
+    $("#txtFecha").val("");
+    $("#txtNotas").val("");
+} //limpiarCampos
+
 function alerta(titulo,mensaje,color) {
     $.alert({
         theme: "dark",
@@ -240,23 +271,20 @@ function alerta(titulo,mensaje,color) {
     });
 } //alerta
 
-function consultar() {
-    //Se borran los renglones de la tabla para volverla a llenar
-    //$("#tblVer").find("tr:gt(0)").remove();
-    //$("#tblVer").html("");
-    //mostrarCapa("consultar");
-    //var html = "";
+function consultar(inTipo) {
     $("#lstRegistros").empty();
-    contarRegistros();
+    //contarRegistros();
     var inAcumulado = 0;
     db.transaction(function (transaction) {
-        transaction.executeSql('SELECT * FROM tbl_Movimientos ORDER BY mov_Fecha', [], onSuccess, onError);
+        if (inTipo == 0) transaction.executeSql('SELECT * FROM tbl_Movimientos ORDER BY mov_Fecha DESC', [], onSuccess, onError)
+        else transaction.executeSql('SELECT * FROM tbl_Movimientos WHERE mov_Concepto = ' + inTipo + ' ORDER BY mov_Fecha DESC', [], onSuccess, onError);
     });
 
     function onSuccess(transaction, data) {
         if (data.rows.length > 0) {
             for (i = 0; i < data.rows.length; i++) {
-                $("#lstRegistros").append(`<li id='registro${i}'>` + arrConceptos[data.rows.item(i).mov_Concepto-1] + "<br />" + data.rows.item(i).mov_Fecha + "     " + ((data.rows.item(i).mov_Cantidad).toFixed(2)).toString().padEnd(210,"&nbsp;") + "<img src='img/post-it.png' height='auto' width='10%' onclick='navigator.notification.alert(\"" + data.rows.item(i).mov_Notas + "\")' /></li>");
+                $("#lstRegistros").append(`<li id='registro${i}'>` + arrConceptos[data.rows.item(i).mov_Concepto-1] + "<br />" + data.rows.item(i).mov_Fecha + "     " + ((data.rows.item(i).mov_Cantidad).toFixed(2)).toString().padEnd(210,"&nbsp;") + "<span onclick='navigator.notification.alert(\"" + data.rows.item(i).mov_Notas + "\")' class='material-icons tamano-icono-barra color-icono-barra'>insert_comment</span></li>");
+                $(`#registro${i}`).addClass("tarjeta-tipo tarjeta-tipo-oscuro");
                 $(`#registro${i}`).css("border-left-color",`${arrColores[data.rows.item(i).mov_Concepto-1]}`);
                 inAcumulado += data.rows.item(i).mov_Cantidad;
                 if (inAcumulado > localStorage.AlarmaAcumulado) {
@@ -267,6 +295,7 @@ function consultar() {
         else {
             $(".empty-item").css("display", "block");
         }
+        contarRegistros();
     }
 
     function onError(tx, error) {
@@ -274,31 +303,31 @@ function consultar() {
     }
 } //consultar
 
-/***************  Funciones para la operación de la lista de registros *******************/
 function contarRegistros() {
-    var inCuentaLista = $('#lstRegistros .in').length;
-    $('.cuenta-lista').text(inCuentaLista + ' items');
+    var inCuentaLista = $("#lstRegistros li").length;
+    $("#sNumReg").html(inCuentaLista);
 } //contarRegistros
 
 function buscar() {
     $("#lstRegistros").empty();
-    contarRegistros();
+    //contarRegistros();
     let stParcial = $("#txtBuscar").val();
     db.transaction(function (transaction) {
-        transaction.executeSql(`SELECT * FROM tbl_Movimientos WHERE mov_Notas LIKE '%${stParcial}%' ORDER BY mov_Fecha`, [], onSuccess, onError);
+        transaction.executeSql(`SELECT * FROM tbl_Movimientos WHERE mov_Notas LIKE '%${stParcial}%' ORDER BY mov_Fecha DESC`, [], onSuccess, onError);
     });
 
     function onSuccess(transaction, data) {
         if (data.rows.length > 0) {
             for (i = 0; i < data.rows.length; i++) {
-                $("#lstRegistros").append(`<li id='registro${i}'>` + arrConceptos[data.rows.item(i).mov_Concepto-1] + "<br />" + data.rows.item(i).mov_Fecha + "     " + ((data.rows.item(i).mov_Cantidad).toFixed(2)).toString().padEnd(210,"&nbsp;") + "<img src='img/post-it.png' height='auto' width='10%' onclick='navigator.notification.alert(\"" + data.rows.item(i).mov_Notas + "\")' /></li>");
+                $("#lstRegistros").append(`<li id='registro${i}'>` + arrConceptos[data.rows.item(i).mov_Concepto-1] + "<br />" + data.rows.item(i).mov_Fecha + "     " + ((data.rows.item(i).mov_Cantidad).toFixed(2)).toString().padEnd(210,"&nbsp;") + "<span onclick='navigator.notification.alert(\"" + data.rows.item(i).mov_Notas + "\")' class='material-icons tamano-icono-barra color-icono-barra'>insert_comment</span></li>");
+                $(`#registro${i}`).addClass("tarjeta-tipo tarjeta-tipo-oscuro");
                 $(`#registro${i}`).css("border-left-color",`${arrColores[data.rows.item(i).mov_Concepto-1]}`);
-                inAcumulado += data.rows.item(i).mov_Cantidad;
             };
         }
         else {
             $(".empty-item").css("display", "block");
         }
+        contarRegistros();
     }
 
     function onError(tx, error) {
