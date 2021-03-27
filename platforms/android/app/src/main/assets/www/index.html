@@ -135,10 +135,15 @@
         </div>        
         <div id="divAgregar">
             <table id="tblAgregar" width="100%">
-                <tr><td colspan="2">&nbsp;</td></tr>
                 <tr>
                     <td style="text-align: right; width: 40%;"><label for="txtCantidad">Cantidad</label></td>
-                    <td style="width: 60%;"><input type="number" id="txtCantidad" class="form-control form-control-oscuro" style="width: 70%;" /></td>
+                    <td style="width: 60%;"><input type="number" id="txtCantidad" class="form-control form-control-oscuro form-control-derecha" style="width: 70%;" /></td>
+                </tr>
+                <tr>
+                    <td id="tdAvisoLimite" style="visibility: hidden; text-align: center;" colspan="2"></td>
+                </tr>
+                <tr>
+                    <td id="tdAvisoAcumulado" style="visibility: hidden; text-align: center;" colspan="2"></td>
                 </tr>
                 <tr>
                     <td colspan="2">&nbsp;</td>
@@ -208,10 +213,10 @@
         <div id="divConfigurar">
             <br /><br />
             <label for="txtCantidadLimite">Cantidad de alarma por operación</label><br />
-            <input type="number" id="txtCantidadLimite" class="form-control form-control-oscuro" />
+            <input type="number" id="txtCantidadLimite" class="form-control form-control-oscuro form-control-derecha" />
             <br /><br />
             <label for="txtAcumuladoLimite">Cantidad de alarma por acumulado</label><br />
-            <input type="number" id="txtAcumuladoLimite" class="form-control form-control-oscuro" />
+            <input type="number" id="txtAcumuladoLimite" class="form-control form-control-oscuro form-control-derecha" />
             <br /><br />
             <div id="divAlarma" style="width: 100%; display: table;">
                 <div style="width: 45%; text-align: right; display: table-cell; vertical-align: middle;">

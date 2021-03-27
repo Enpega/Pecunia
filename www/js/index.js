@@ -43,6 +43,7 @@ var app = {
         console.log('Received Event: ' + id);
 
         iniciarBD();
+        iniciarConfiguracion();
 
         $("#txtCantidadLimite").blur(function() {
             guardarAlarmaCantidad();
@@ -99,6 +100,20 @@ var app = {
 
         $("#txtBuscar").on("keyup", function() {
             ($("#txtBuscar").val() !== "") ? buscar() : consultar(0);
+        });
+
+        $("#txtCantidad").blur(function() {
+            if ((localStorage.Alarma == "true") && (parseFloat(localStorage.AlarmaCantidad) > 0) && (parseFloat($("#txtCantidad").val()) > parseFloat(localStorage.AlarmaCantidad))) {
+                $("#txtCantidad").addClass("form-control-aviso");
+                $("#tdAvisoLimite").html("Límite de cantidad excedido");
+                $("#tdAvisoLimite").css("visibility","visible");
+            }
+        
+            if ((localStorage.Alarma == "true") && (parseFloat(localStorage.AlarmaAcumulado) > 0) && (parseFloat($("#txtCantidad").val())+parseFloat(localStorage.Acumulado) > parseFloat(localStorage.AlarmaAcumulado))) {
+                $("#txtCantidad").addClass("form-control-aviso");
+                $("#tdAvisoAcumulado").html("Límite de acumulado excedido");
+                $("#tdAvisoAcumulado").css("visibility","visible");
+            }
         });
         /* document.addEventListener("pause", function(){mostrarSplash()}, false);
         document.addEventListener("resume", function(){cerrarSplash()}, false);
@@ -159,6 +174,21 @@ function iniciarBD() {
     }
 } //iniciarBD
 
+function iniciarConfiguracion() {
+    if (!localStorage.AlarmaCantidad) {
+        localStorage.AlarmaCantidad = 0;
+    }
+    if (!localStorage.AlarmaAcumulado) {
+        localStorage.AlarmaAcumulado = 0;
+    }
+    if (!localStorage.Alarma) {
+        localStorage.Alarma = "false";
+    }
+    if (!localStorage.Acumulado) {
+        localStorage.Acumulado = 0;
+    }
+} //iniciarConfiguracion
+
 function leerConfiguracion() {
     if (localStorage.AlarmaCantidad) {
         $("#txtCantidadLimite").val(localStorage.AlarmaCantidad);
@@ -188,11 +218,6 @@ function guardarAlarma() {
 } //guardarAlarma
 
 function guardarRegistro() {
-    if (parseFloat($("#txtCantidad").val()) > parseFloat(localStorage.AlarmaCantidad)) {
-        alerta("", "Esta cantidad excede el límite", "yellow");
-        return;
-    }
-
     var bTodo = true;
     if (($("#txtCantidad").val()=="")) {
         $("#txtCantidad").removeClass("campoTexto");
@@ -235,11 +260,10 @@ function guardarRegistro() {
         });
         function onSuccess(tx, result) {
                 alerta("Aviso", "Información guardada", "blue");
+                //Se actualiza el importe Acumulado
+                localStorage.Acumulado = parseFloat(localStorage.Acumulado) + parseFloat($("#txtCantidad").val());
                 //Reinicio de los campos
-                $("#txtCantidad").val("");
-                $("#textFecha").val("");
-                $("#selConcepto").val(0);
-                $("#txtNotas").val("");
+                limpiarCampos();
         }
         function onError(tx, error){
             alerta("", 'Ocurrió un error al intentar registrar' + error.message, "red");
@@ -248,7 +272,12 @@ function guardarRegistro() {
 } //guardarRegistro
 
 function limpiarCampos() {
-    $("$txtCantidad").val("");
+    $("#txtCantidad").val("");
+    $("#txtCantidad").removeClass("form-control-aviso");
+    $("#tdAvisoLimite").css("visibility","hidden");
+    $("#tdAvisoLimite").html("");
+    $("#tdAvisoAcumulado").css("visibility","hidden");
+    $("#tdAvisoAcumulado").html("");
     $("#selConcepto").val(0);
     $("#txtFecha").val("");
     $("#txtNotas").val("");
@@ -287,7 +316,7 @@ function consultar(inTipo) {
                 $(`#registro${i}`).addClass("tarjeta-tipo tarjeta-tipo-oscuro");
                 $(`#registro${i}`).css("border-left-color",`${arrColores[data.rows.item(i).mov_Concepto-1]}`);
                 inAcumulado += data.rows.item(i).mov_Cantidad;
-                if (inAcumulado > localStorage.AlarmaAcumulado) {
+                if (parseFloat(inAcumulado) > parseFloat(localStorage.AlarmaAcumulado)) {
                     alerta("", "Se excedió el límite acumulado", "red")
                 }
             };
