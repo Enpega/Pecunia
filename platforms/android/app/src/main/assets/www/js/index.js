@@ -43,6 +43,7 @@ var app = {
         console.log('Received Event: ' + id);
 
         iniciarBD();
+        iniciarConfiguracion();
 
         $("#txtCantidadLimite").blur(function() {
             guardarAlarmaCantidad();
@@ -53,13 +54,67 @@ var app = {
         });
 
         $("#chbAlarma").on("change", function() {
-            guardarAlarma();
+            if ($("#chbAlarma").prop("checked") === true) {
+                if ($("#txtCantidadLimite").val() == "") {
+                    $("#txtCantidadLimite").val("0");
+                }
+                if ($("#txtAcumuladoLimite").val() == "") {
+                    $("#txtAcumuladoLimite").val("0");
+                }
+                if (($("#txtCantidadLimite").val() == "0") && ($("#txtAcumuladoLimite").val() == "0")) {
+                    $("#chbAlarma").prop("checked",false)
+                    alerta("Aviso","No se puede activar la alarma porque no hay ningún límite establecido", "orange");
+                    return;
+                }             
+            }
+            guardarAlarma(); 
         });
 
         $("#btnGuardar").on("click", function() {
             guardarRegistro();
         });
 
+        $("#btnCancelar").on("click", function() {
+            limpiarCampos();
+        });
+
+        $(".barra-separacion").on("click", function() {
+            mostrarCapa("div" + $(this).attr("id")); 
+        });
+
+        $("#btnEfectivo").on("click", function() {
+            consultar(1);
+        });
+
+        $("#btnTarjeta").on("click", function() {
+            consultar(2);
+        });
+
+        $("#btnAplicacion").on("click", function() {
+            consultar(3);
+        });
+
+        $("#btnCheque").on("click", function() {
+            consultar(4);
+        });
+
+        $("#txtBuscar").on("keyup", function() {
+            ($("#txtBuscar").val() !== "") ? buscar() : consultar(0);
+        });
+
+        $("#txtCantidad").blur(function() {
+            if ((localStorage.Alarma == "true") && (parseFloat(localStorage.AlarmaCantidad) > 0) && (parseFloat($("#txtCantidad").val()) > parseFloat(localStorage.AlarmaCantidad))) {
+                $("#txtCantidad").addClass("form-control-aviso");
+                $("#tdAvisoLimite").html("Límite de cantidad excedido");
+                $("#tdAvisoLimite").css("visibility","visible");
+            }
+        
+            if ((localStorage.Alarma == "true") && (parseFloat(localStorage.AlarmaAcumulado) > 0) && (parseFloat($("#txtCantidad").val())+parseFloat(localStorage.Acumulado) > parseFloat(localStorage.AlarmaAcumulado))) {
+                $("#txtCantidad").addClass("form-control-aviso");
+                $("#tdAvisoAcumulado").html("Límite de acumulado excedido");
+                $("#tdAvisoAcumulado").css("visibility","visible");
+            }
+        });
         /* document.addEventListener("pause", function(){mostrarSplash()}, false);
         document.addEventListener("resume", function(){cerrarSplash()}, false);
 
@@ -68,6 +123,10 @@ var app = {
         //cerrarSplash()
     }
 };
+
+//Definición de variables y constantes
+let arrConceptos = ["Efectivo", "Tarjeta", "Aplicación", "Cheque"];
+let arrColores   = ["#FF3636", "#18ce0f", "#2CA8FF", "#FFB236"]; //rojo verde azul amarillo
 
 /*************** Funciones de la aplicación ****************************/
 
@@ -97,7 +156,7 @@ function mostrarCapa(capa) {
         leerConfiguracion();
     }
     if (capa == "divVer") {
-        consultar();
+        consultar(0);
     }
 } //mostrarCapa
 
@@ -115,6 +174,21 @@ function iniciarBD() {
     }
 } //iniciarBD
 
+function iniciarConfiguracion() {
+    if (!localStorage.AlarmaCantidad) {
+        localStorage.AlarmaCantidad = 0;
+    }
+    if (!localStorage.AlarmaAcumulado) {
+        localStorage.AlarmaAcumulado = 0;
+    }
+    if (!localStorage.Alarma) {
+        localStorage.Alarma = "false";
+    }
+    if (!localStorage.Acumulado) {
+        localStorage.Acumulado = 0;
+    }
+} //iniciarConfiguracion
+
 function leerConfiguracion() {
     if (localStorage.AlarmaCantidad) {
         $("#txtCantidadLimite").val(localStorage.AlarmaCantidad);
@@ -123,7 +197,7 @@ function leerConfiguracion() {
         $("#txtAcumuladoLimite").val(localStorage.AlarmaAcumulado);
     }
     if (localStorage.Alarma) {
-        $("#chbAlarma").prop("checked",localStorage.Alarma);
+        $("#chbAlarma").prop("checked",(localStorage.Alarma == "true"));
     }
 } //leerConfiguracion
 
@@ -144,11 +218,6 @@ function guardarAlarma() {
 } //guardarAlarma
 
 function guardarRegistro() {
-    if (parseFloat($("#txtCantidad").val()) > parseFloat(localStorage.AlarmaCantidad)) {
-        alerta("", "Esta cantidad excede el límite", "yellow");
-        return;
-    }
-
     var bTodo = true;
     if (($("#txtCantidad").val()=="")) {
         $("#txtCantidad").removeClass("campoTexto");
@@ -191,17 +260,28 @@ function guardarRegistro() {
         });
         function onSuccess(tx, result) {
                 alerta("Aviso", "Información guardada", "blue");
+                //Se actualiza el importe Acumulado
+                localStorage.Acumulado = parseFloat(localStorage.Acumulado) + parseFloat($("#txtCantidad").val());
                 //Reinicio de los campos
-                $("#txtCantidad").val("");
-                $("#textFecha").val("");
-                $("#selConcepto").val(0);
-                $("#txtNotas").val("");
+                limpiarCampos();
         }
         function onError(tx, error){
             alerta("", 'Ocurrió un error al intentar registrar' + error.message, "red");
         }
     }    
 } //guardarRegistro
+
+function limpiarCampos() {
+    $("#txtCantidad").val("");
+    $("#txtCantidad").removeClass("form-control-aviso");
+    $("#tdAvisoLimite").css("visibility","hidden");
+    $("#tdAvisoLimite").html("");
+    $("#tdAvisoAcumulado").css("visibility","hidden");
+    $("#tdAvisoAcumulado").html("");
+    $("#selConcepto").val(0);
+    $("#txtFecha").val("");
+    $("#txtNotas").val("");
+} //limpiarCampos
 
 function alerta(titulo,mensaje,color) {
     $.alert({
@@ -220,32 +300,66 @@ function alerta(titulo,mensaje,color) {
     });
 } //alerta
 
-function consultar() {
-    //Se borran los renglones de la tabla para volverla a llenar
-    //$("#tblVer").find("tr:gt(0)").remove();
-    $("#tblVer").html("");
-    //mostrarCapa("consultar");
-    var html = "";
+function consultar(inTipo) {
+    $("#lstRegistros").empty();
+    //contarRegistros();
     var inAcumulado = 0;
     db.transaction(function (transaction) {
-        transaction.executeSql('SELECT * FROM tbl_Movimientos ORDER BY mov_Fecha', [], onSuccess, onError);
+        if (inTipo == 0) transaction.executeSql('SELECT * FROM tbl_Movimientos ORDER BY mov_Fecha DESC', [], onSuccess, onError)
+        else transaction.executeSql('SELECT * FROM tbl_Movimientos WHERE mov_Concepto = ' + inTipo + ' ORDER BY mov_Fecha DESC', [], onSuccess, onError);
     });
 
     function onSuccess(transaction, data) {
-        for (i = 0; i < data.rows.length; i++) {
-            html += "<tr><td class='celdaBoton' style='border: 1px solid whitesmoke;'><span class='textoTabla'>" + data.rows.item(i).mov_Cantidad + "</span></td>";
-            html += "<td class='celdaBoton' style='border: 1px solid whitesmoke;'><span class='textoTabla'>" + data.rows.item(i).mov_Concepto + "</span></td>";
-            html += "<td class='celdaBoton' style='border: 1px solid whitesmoke;'><span class='textoTabla'>" + data.rows.item(i).mov_Fecha + "</span></td>";
-            html += "<td class='celdaBoton' style='border: 1px solid whitesmoke;'><span class='textoTabla'>" +  data.rows.item(i).mov_Notas + "</span></td>";
-            inAcumulado += data.rows.item(i).mov_Cantidad;
-            if (inAcumulado > localStorage.AlarmaAcumulado) {
-                alerta("", "Se excedió el límite acumulado", "red")
-            }
-        };
-        $('#tblVer').append(html);
+        if (data.rows.length > 0) {
+            for (i = 0; i < data.rows.length; i++) {
+                $("#lstRegistros").append(`<li id='registro${i}'>` + arrConceptos[data.rows.item(i).mov_Concepto-1] + "<br />" + data.rows.item(i).mov_Fecha + "     " + ((data.rows.item(i).mov_Cantidad).toFixed(2)).toString().padEnd(210,"&nbsp;") + "<span onclick='navigator.notification.alert(\"" + data.rows.item(i).mov_Notas + "\")' class='material-icons tamano-icono-barra color-icono-barra'>insert_comment</span></li>");
+                $(`#registro${i}`).addClass("tarjeta-tipo tarjeta-tipo-oscuro");
+                $(`#registro${i}`).css("border-left-color",`${arrColores[data.rows.item(i).mov_Concepto-1]}`);
+                inAcumulado += data.rows.item(i).mov_Cantidad;
+                if (parseFloat(inAcumulado) > parseFloat(localStorage.AlarmaAcumulado)) {
+                    alerta("", "Se excedió el límite acumulado", "red")
+                }
+            };
+        }
+        else {
+            $(".empty-item").css("display", "block");
+        }
+        contarRegistros();
     }
 
     function onError(tx, error) {
         alerta("", "Ocurrió un error al leer la información", "red");
     }
 } //consultar
+
+function contarRegistros() {
+    var inCuentaLista = $("#lstRegistros li").length;
+    $("#sNumReg").html(inCuentaLista);
+} //contarRegistros
+
+function buscar() {
+    $("#lstRegistros").empty();
+    //contarRegistros();
+    let stParcial = $("#txtBuscar").val();
+    db.transaction(function (transaction) {
+        transaction.executeSql(`SELECT * FROM tbl_Movimientos WHERE mov_Notas LIKE '%${stParcial}%' ORDER BY mov_Fecha DESC`, [], onSuccess, onError);
+    });
+
+    function onSuccess(transaction, data) {
+        if (data.rows.length > 0) {
+            for (i = 0; i < data.rows.length; i++) {
+                $("#lstRegistros").append(`<li id='registro${i}'>` + arrConceptos[data.rows.item(i).mov_Concepto-1] + "<br />" + data.rows.item(i).mov_Fecha + "     " + ((data.rows.item(i).mov_Cantidad).toFixed(2)).toString().padEnd(210,"&nbsp;") + "<span onclick='navigator.notification.alert(\"" + data.rows.item(i).mov_Notas + "\")' class='material-icons tamano-icono-barra color-icono-barra'>insert_comment</span></li>");
+                $(`#registro${i}`).addClass("tarjeta-tipo tarjeta-tipo-oscuro");
+                $(`#registro${i}`).css("border-left-color",`${arrColores[data.rows.item(i).mov_Concepto-1]}`);
+            };
+        }
+        else {
+            $(".empty-item").css("display", "block");
+        }
+        contarRegistros();
+    }
+
+    function onError(tx, error) {
+        alerta("", "Ocurrió un error al leer la información", "red");
+    }
+} //buscar
