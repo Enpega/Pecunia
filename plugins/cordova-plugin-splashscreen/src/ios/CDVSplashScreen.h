@@ -28,7 +28,6 @@ typedef struct {
     BOOL iPhone6;
     BOOL iPhone6Plus;
     BOOL retina;
-    BOOL iPhoneX;
     
 } CDV_iOSDevice;
 
@@ -37,7 +36,6 @@ typedef struct {
     UIImageView* _imageView;
     NSString* _curImageName;
     BOOL _visible;
-    BOOL _destroyed;
 }
 
 - (void)show:(CDVInvokedUrlCommand*)command;

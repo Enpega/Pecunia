@@ -147,6 +147,7 @@ body {
 }
 
 .boton-redondo-ver {
+    width: 100%;
     border-width: 1px;
     border-radius: 30px !important;
 }
@@ -205,6 +206,11 @@ body {
 .boton-amarillo {
     background-color: #FFB236;
     color: #FFFFFF;
+}
+
+.divBotonConsultar {
+    width: 25%;
+    display: table-cell;
 }
 
 .barra-superior {

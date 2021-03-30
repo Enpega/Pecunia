@@ -23,7 +23,6 @@
 #import "CDVViewController+SplashScreen.h"
 
 #define kSplashScreenDurationDefault 3000.0f
-#define kFadeDurationDefault 500.0f
 
 
 @implementation CDVSplashScreen
@@ -42,7 +41,7 @@
 
 - (void)hide:(CDVInvokedUrlCommand*)command
 {
-    [self setVisible:NO andForce:YES];
+    [self setVisible:NO];
 }
 
 - (void)pageDidLoad
@@ -74,10 +73,10 @@
     // Determine whether rotation should be enabled for this device
     // Per iOS HIG, landscape is only supported on iPad and iPhone 6+
     CDV_iOSDevice device = [self getCurrentDevice];
-    BOOL autorotateValue = (device.iPad || device.iPhone6Plus || device.iPhoneX) ?
+    BOOL autorotateValue = (device.iPad || device.iPhone6Plus) ?
         [(CDVViewController *)self.viewController shouldAutorotateDefaultValue] :
         NO;
-
+    
     [(CDVViewController *)self.viewController setEnabledAutorotation:autorotateValue];
 
     NSString* topActivityIndicator = [self.commandDelegate.settings objectForKey:[@"TopActivityIndicator" lowercaseString]];
@@ -121,7 +120,6 @@
     [parentView addObserver:self forKeyPath:@"bounds" options:0 context:nil];
 
     [self updateImage];
-    _destroyed = NO;
 }
 
 - (void)hideViews
@@ -132,7 +130,6 @@
 
 - (void)destroyViews
 {
-    _destroyed = YES;
     [(CDVViewController *)self.viewController setEnabledAutorotation:[(CDVViewController *)self.viewController shouldAutorotateDefaultValue]];
 
     [_imageView removeFromSuperview];
@@ -142,28 +139,20 @@
     _curImageName = nil;
 
     self.viewController.view.userInteractionEnabled = YES;  // re-enable user interaction upon completion
-    @try {
-        [self.viewController.view removeObserver:self forKeyPath:@"frame"];
-        [self.viewController.view removeObserver:self forKeyPath:@"bounds"];
-    }
-    @catch (NSException *exception) {
-        // When reloading the page from a remotely connected Safari, there
-        // are no observers, so the removeObserver method throws an exception,
-        // that we can safely ignore.
-        // Alternatively we can check whether there are observers before calling removeObserver
-    }
+    [self.viewController.view removeObserver:self forKeyPath:@"frame"];
+    [self.viewController.view removeObserver:self forKeyPath:@"bounds"];
 }
 
 - (CDV_iOSDevice) getCurrentDevice
 {
     CDV_iOSDevice device;
-
+    
     UIScreen* mainScreen = [UIScreen mainScreen];
     CGFloat mainScreenHeight = mainScreen.bounds.size.height;
     CGFloat mainScreenWidth = mainScreen.bounds.size.width;
-
+    
     int limit = MAX(mainScreenHeight,mainScreenWidth);
-
+    
     device.iPad = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad);
     device.iPhone = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone);
     device.retina = ([mainScreen scale] == 2.0);
@@ -174,39 +163,23 @@
     // this is appropriate for detecting the runtime screen environment
     device.iPhone6 = (device.iPhone && limit == 667.0);
     device.iPhone6Plus = (device.iPhone && limit == 736.0);
-    device.iPhoneX  = (device.iPhone && limit == 812.0);
-
+    
     return device;
-}
-
-- (BOOL) isUsingCDVLaunchScreen {
-    NSString* launchStoryboardName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UILaunchStoryboardName"];
-    if (launchStoryboardName) {
-        return ([launchStoryboardName isEqualToString:@"CDVLaunchScreen"]);
-    } else {
-        return NO;
-    }
 }
 
 - (NSString*)getImageName:(UIInterfaceOrientation)currentOrientation delegate:(id<CDVScreenOrientationDelegate>)orientationDelegate device:(CDV_iOSDevice)device
 {
     // Use UILaunchImageFile if specified in plist.  Otherwise, use Default.
     NSString* imageName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UILaunchImageFile"];
-
-    // detect if we are using CB-9762 Launch Storyboard; if so, return the associated image instead
-    if ([self isUsingCDVLaunchScreen]) {
-        imageName = @"LaunchStoryboard";
-        return imageName;
-    }
-
+    
     NSUInteger supportedOrientations = [orientationDelegate supportedInterfaceOrientations];
-
+    
     // Checks to see if the developer has locked the orientation to use only one of Portrait or Landscape
     BOOL supportsLandscape = (supportedOrientations & UIInterfaceOrientationMaskLandscape);
     BOOL supportsPortrait = (supportedOrientations & UIInterfaceOrientationMaskPortrait || supportedOrientations & UIInterfaceOrientationMaskPortraitUpsideDown);
     // this means there are no mixed orientations in there
     BOOL isOrientationLocked = !(supportsPortrait && supportsLandscape);
-
+    
     if (imageName)
     {
         imageName = [imageName stringByDeletingPathExtension];
@@ -223,12 +196,8 @@
             imageName = [imageName stringByAppendingString:@"-700"];
         } else if(device.iPhone6) {
             imageName = [imageName stringByAppendingString:@"-800"];
-        } else if(device.iPhone6Plus || device.iPhoneX ) {
-            if(device.iPhone6Plus) {
-                imageName = [imageName stringByAppendingString:@"-800"];
-            } else {
-                imageName = [imageName stringByAppendingString:@"-1100"];
-            }
+        } else if(device.iPhone6Plus) {
+            imageName = [imageName stringByAppendingString:@"-800"];
             if (currentOrientation == UIInterfaceOrientationPortrait || currentOrientation == UIInterfaceOrientationPortraitUpsideDown)
             {
                 imageName = [imageName stringByAppendingString:@"-Portrait"];
@@ -244,7 +213,7 @@
     { // does not support landscape
         imageName = [imageName stringByAppendingString:@"-667h"];
     }
-    else if (device.iPhone6Plus || device.iPhoneX)
+    else if (device.iPhone6Plus)
     { // supports landscape
         if (isOrientationLocked)
         {
@@ -262,11 +231,8 @@
                     break;
             }
         }
-        if (device.iPhoneX) {
-            imageName = [imageName stringByAppendingString:@"-2436h"];
-        } else {
-            imageName = [imageName stringByAppendingString:@"-736h"];
-        }
+        imageName = [imageName stringByAppendingString:@"-736h"];
+
     }
     else if (device.iPad)
     {   // supports landscape
@@ -282,7 +248,7 @@
                 case UIInterfaceOrientationLandscapeRight:
                     imageName = [imageName stringByAppendingString:@"-Landscape"];
                     break;
-
+                    
                 case UIInterfaceOrientationPortrait:
                 case UIInterfaceOrientationPortraitUpsideDown:
                 default:
@@ -291,7 +257,7 @@
             }
         }
     }
-
+    
     return imageName;
 }
 
@@ -357,14 +323,6 @@
 
 - (void)updateBounds
 {
-    if ([self isUsingCDVLaunchScreen]) {
-        // CB-9762's launch screen expects the image to fill the screen and be scaled using AspectFill.
-        CGSize viewportSize = [UIApplication sharedApplication].delegate.window.bounds.size;
-        _imageView.frame = CGRectMake(0, 0, viewportSize.width, viewportSize.height);
-        _imageView.contentMode = UIViewContentModeScaleAspectFill;
-        return; 
-    }
-
     UIImage* img = _imageView.image;
     CGRect imgBounds = (img) ? CGRectMake(0, 0, img.size.width, img.size.height) : CGRectZero;
 
@@ -378,7 +336,7 @@
      * correctly.
      */
     CDV_iOSDevice device = [self getCurrentDevice];
-    if (UIInterfaceOrientationIsLandscape(orientation) && !device.iPhone6Plus && !device.iPad && !device.iPhoneX)
+    if (UIInterfaceOrientationIsLandscape(orientation) && !device.iPhone6Plus && !device.iPad)
     {
         imgTransform = CGAffineTransformMakeRotation(M_PI / 2);
         imgBounds.size = CGSizeMake(imgBounds.size.height, imgBounds.size.width);
@@ -418,19 +376,14 @@
 
 - (void)setVisible:(BOOL)visible
 {
-    [self setVisible:visible andForce:NO];
-}
-
-- (void)setVisible:(BOOL)visible andForce:(BOOL)force
-{
-    if (visible != _visible || force)
+    if (visible != _visible)
     {
         _visible = visible;
 
         id fadeSplashScreenValue = [self.commandDelegate.settings objectForKey:[@"FadeSplashScreen" lowercaseString]];
         id fadeSplashScreenDuration = [self.commandDelegate.settings objectForKey:[@"FadeSplashScreenDuration" lowercaseString]];
 
-        float fadeDuration = fadeSplashScreenDuration == nil ? kFadeDurationDefault : [fadeSplashScreenDuration floatValue];
+        float fadeDuration = fadeSplashScreenDuration == nil ? kSplashScreenDurationDefault : [fadeSplashScreenDuration floatValue];
 
         id splashDurationString = [self.commandDelegate.settings objectForKey: [@"SplashScreenDelay" lowercaseString]];
         float splashDuration = splashDurationString == nil ? kSplashScreenDurationDefault : [splashDurationString floatValue];
@@ -480,32 +433,26 @@
             __weak __typeof(self) weakSelf = self;
             float effectiveSplashDuration;
 
-            // [CB-10562] AutoHideSplashScreen may be "true" but we should still be able to hide the splashscreen manually.
-            if (!autoHideSplashScreen || force) {
+            if (!autoHideSplashScreen) {
                 effectiveSplashDuration = (fadeDuration) / 1000;
             } else {
                 effectiveSplashDuration = (splashDuration - fadeDuration) / 1000;
             }
 
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (uint64_t) effectiveSplashDuration * NSEC_PER_SEC), dispatch_get_main_queue(), CFBridgingRelease(CFBridgingRetain(^(void) {
-                if (!_destroyed) {
-                    [UIView transitionWithView:self.viewController.view
-                                    duration:(fadeDuration / 1000)
-                                    options:UIViewAnimationOptionTransitionNone
-                                    animations:^(void) {
-                                        [weakSelf hideViews];
-                                    }
-                                    completion:^(BOOL finished) {
-                                        // Always destroy views, otherwise you could have an
-                                        // invisible splashscreen that is overlayed over your active views
-                                        // which causes that no touch events are passed
-                                        if (!_destroyed) {
-                                            [weakSelf destroyViews];
-                                            // TODO: It might also be nice to have a js event happen here -jm
-                                        }
-                                    }
+                   [UIView transitionWithView:self.viewController.view
+                                   duration:(fadeDuration / 1000)
+                                   options:UIViewAnimationOptionTransitionNone
+                                   animations:^(void) {
+                                       [weakSelf hideViews];
+                                   }
+                                   completion:^(BOOL finished) {
+                                       if (finished) {
+                                           [weakSelf destroyViews];
+                                           // TODO: It might also be nice to have a js event happen here -jm
+                                       }
+                                     }
                     ];
-                }
             })));
         }
     }

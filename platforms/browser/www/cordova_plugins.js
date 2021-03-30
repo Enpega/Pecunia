@@ -80,7 +80,7 @@ module.exports.metadata =
     "cordova-plugin-dialogs": "1.3.4",
     "cordova-plugin-globalization": "1.0.9",
     "cordova-plugin-whitelist": "1.3.4",
-    "cordova-plugin-splashscreen": "5.0.4"
+    "cordova-plugin-splashscreen": "3.2.1"
 }
 // BOTTOM OF METADATA
 });

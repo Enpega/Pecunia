@@ -53,7 +53,7 @@ cordova.define('cordova/plugin_list', function(require, exports, module) {
     "cordova-plugin-device": "1.1.7",
     "cordova-plugin-dialogs": "1.3.4",
     "cordova-plugin-globalization": "1.0.9",
-    "cordova-plugin-splashscreen": "5.0.4",
+    "cordova-plugin-splashscreen": "3.2.1",
     "cordova-plugin-whitelist": "1.3.4"
   };
 });

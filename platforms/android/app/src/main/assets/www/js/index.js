@@ -312,11 +312,11 @@ function consultar(inTipo) {
     function onSuccess(transaction, data) {
         if (data.rows.length > 0) {
             for (i = 0; i < data.rows.length; i++) {
-                $("#lstRegistros").append(`<li id='registro${i}'>` + arrConceptos[data.rows.item(i).mov_Concepto-1] + "<br />" + data.rows.item(i).mov_Fecha + "     " + ((data.rows.item(i).mov_Cantidad).toFixed(2)).toString().padEnd(210,"&nbsp;") + "<span onclick='navigator.notification.alert(\"" + data.rows.item(i).mov_Notas + "\")' class='material-icons tamano-icono-barra color-icono-barra'>insert_comment</span></li>");
+                $("#lstRegistros").append(`<li id='registro${i}'>` + arrConceptos[data.rows.item(i).mov_Concepto-1] + "<br />" + data.rows.item(i).mov_Fecha + "<br />" + ((data.rows.item(i).mov_Cantidad).toFixed(2)).toString() + "<br /><span onclick='alerta(\"\",\"" + data.rows.item(i).mov_Notas + "\",\"blue\")' class='material-icons tamano-icono-barra color-icono-barra'>insert_comment</span></li>");
                 $(`#registro${i}`).addClass("tarjeta-tipo tarjeta-tipo-oscuro");
                 $(`#registro${i}`).css("border-left-color",`${arrColores[data.rows.item(i).mov_Concepto-1]}`);
                 inAcumulado += data.rows.item(i).mov_Cantidad;
-                if (parseFloat(inAcumulado) > parseFloat(localStorage.AlarmaAcumulado)) {
+                if (parseFloat(inAcumulado) > parseFloat(localStorage.AlarmaAcumulado) && (localStorage.Alarma == "true") && (parseFloat(localStorage.AlarmaAcumulado) > 0)) {
                     alerta("", "Se excedió el límite acumulado", "red")
                 }
             };
@@ -348,7 +348,7 @@ function buscar() {
     function onSuccess(transaction, data) {
         if (data.rows.length > 0) {
             for (i = 0; i < data.rows.length; i++) {
-                $("#lstRegistros").append(`<li id='registro${i}'>` + arrConceptos[data.rows.item(i).mov_Concepto-1] + "<br />" + data.rows.item(i).mov_Fecha + "     " + ((data.rows.item(i).mov_Cantidad).toFixed(2)).toString().padEnd(210,"&nbsp;") + "<span onclick='navigator.notification.alert(\"" + data.rows.item(i).mov_Notas + "\")' class='material-icons tamano-icono-barra color-icono-barra'>insert_comment</span></li>");
+                $("#lstRegistros").append(`<li id='registro${i}'>` + arrConceptos[data.rows.item(i).mov_Concepto-1] + "<br />" + data.rows.item(i).mov_Fecha + "<br />" + ((data.rows.item(i).mov_Cantidad).toFixed(2)).toString() + "<br /><span onclick='alerta(\"\",\"" + data.rows.item(i).mov_Notas + "\",\"blue\")' class='material-icons tamano-icono-barra color-icono-barra'>insert_comment</span></li>");
                 $(`#registro${i}`).addClass("tarjeta-tipo tarjeta-tipo-oscuro");
                 $(`#registro${i}`).css("border-left-color",`${arrColores[data.rows.item(i).mov_Concepto-1]}`);
             };
