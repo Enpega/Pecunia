@@ -115,6 +115,10 @@ var app = {
                 $("#tdAvisoAcumulado").css("visibility","visible");
             }
         });
+
+        $("#btnBorrar").on("click", function() {
+            borrarRegistros();
+        });
         /* document.addEventListener("pause", function(){mostrarSplash()}, false);
         document.addEventListener("resume", function(){cerrarSplash()}, false);
 
@@ -363,3 +367,40 @@ function buscar() {
         alerta("", "Ocurrió un error al leer la información", "red");
     }
 } //buscar
+
+function borrarRegistros() {
+    $.confirm({
+        theme: "dark",
+        title: "Confirmar",
+        type: "red",
+        typeAnimated: true,
+        content: "¿Está seguro(a) que quiere borrar todos los registros?",
+        buttons: {
+            confirm: {
+                text: "Confirmar",
+                btnClass: "btn-red",
+                action: function () {
+                            db.transaction(function(tx) {
+                                var executeQuery = "DELETE FROM tbl_Movimientos";
+                                tx.executeSql(executeQuery, [], onSuccess, onError);
+                            });
+                }
+            },
+            cancel: {
+                text: "Cancelar",
+                btnClass: "btn-default",
+                action: function() {}
+            }
+        }
+    });    
+    function onSuccess(tx, result) {
+            alerta("Aviso", "Registros borrados", "blue");
+            //Se actualiza el importe Acumulado
+            localStorage.Acumulado = 0;
+            //Reinicio de los campos
+            limpiarCampos();
+    }
+    function onError(tx, error){
+        alerta("", 'Ocurrió un error al intentar borrar' + error.message, "red");
+    }
+} //borrarRegistros

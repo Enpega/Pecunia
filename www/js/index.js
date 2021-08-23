@@ -258,6 +258,13 @@ function guardarRegistro() {
         let stFecha = $("#txtFecha").val();
         let stConcepto = $("#selConcepto").children("option:selected").val();
         let stNotas = $.trim($("#txtNotas").val());
+        // Request storage usage and capacity left
+        /* window.webkitStorageInfo.queryUsageAndQuota(webkitStorageInfo.TEMPORARY, //the type can be either TEMPORARY or PERSISTENT
+            function(used, remaining) {
+              console.log("Used quota: " + used + ", remaining quota: " + remaining);
+            }, function(e) {
+              console.log('Error', e); 
+        } ); */
         db.transaction(function(tx) {
             var executeQuery = "INSERT INTO tbl_Movimientos VALUES (?,?,?,?)";
             tx.executeSql(executeQuery, [inCantidad, stFecha, stConcepto, stNotas], onSuccess, onError);
