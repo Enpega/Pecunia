@@ -162,16 +162,10 @@ function mostrarCapa(capa) {
 
 //Se inicia y/o abre la base de datos
 function iniciarBD() {
-    db = window.openDatabase("pecunia.db", "1", "precunia", 2*1024*1024);
-    db.transaction(function(transaction) {
-        transaction.executeSql('CREATE TABLE IF NOT EXISTS tbl_Movimientos (mov_Cantidad DECIMAL(15, 2), mov_Fecha DATE, mov_Concepto VARCHAR(20), mov_Notas VARCHAR(255))', [], onSuccess, onError);
-    });
-    function onSuccess(tx, result) {
-        console.log("Tabla creada exitosamente");
-    }
-    function onError(tx, error) {
-        alerta("", "Ocurrió un error al crear la base de datos", "red");
-    }
+    db = new Dexie("pecunia");
+
+    db.version(1).stores({tbl_Movimientos : 
+        "++mov_id, mov_Fecha, mov_Concepto, mov_Cantidad, mov_Notas"});
 } //iniciarBD
 
 function iniciarConfiguracion() {
@@ -254,20 +248,8 @@ function guardarRegistro() {
         let stFecha = $("#txtFecha").val();
         let stConcepto = $("#selConcepto").children("option:selected").val();
         let stNotas = $.trim($("#txtNotas").val());
-        db.transaction(function(tx) {
-            var executeQuery = "INSERT INTO tbl_Movimientos VALUES (?,?,?,?)";
-            tx.executeSql(executeQuery, [inCantidad, stFecha, stConcepto, stNotas], onSuccess, onError);
-        });
-        function onSuccess(tx, result) {
-                alerta("Aviso", "Información guardada", "blue");
-                //Se actualiza el importe Acumulado
-                localStorage.Acumulado = parseFloat(localStorage.Acumulado) + parseFloat($("#txtCantidad").val());
-                //Reinicio de los campos
-                limpiarCampos();
-        }
-        function onError(tx, error){
-            alerta("", 'Ocurrió un error al intentar registrar' + error.message, "red");
-        }
+        db.tbl_Movimientos.add({mov_Fecha:stFecha, mov_Concepto:stConcepto, mov_Cantidad:inCantidad, mov_Notas:stNotas})
+        .then(limpiarCampos);
     }    
 } //guardarRegistro
 
@@ -305,11 +287,11 @@ function consultar(inTipo) {
     //contarRegistros();
     var inAcumulado = 0;
     db.transaction(function (transaction) {
-        if (inTipo == 0) transaction.executeSql('SELECT * FROM tbl_Movimientos ORDER BY mov_Fecha DESC', [], onSuccess, onError)
-        else transaction.executeSql('SELECT * FROM tbl_Movimientos WHERE mov_Concepto = ' + inTipo + ' ORDER BY mov_Fecha DESC', [], onSuccess, onError);
+        if (inTipo == 0) db.tbl_Movimientos.toArray().then(onSuccess).catch(onError);
+        else db.tbl_Movimientos.where("mov_Concepto").equals(inTipo).toArray().then(onSuccess).catch(onError);
     });
 
-    function onSuccess(transaction, data) {
+    function onSuccess(data) {
         if (data.rows.length > 0) {
             for (i = 0; i < data.rows.length; i++) {
                 $("#lstRegistros").append(`<li id='registro${i}'>` + arrConceptos[data.rows.item(i).mov_Concepto-1] + "<br />" + data.rows.item(i).mov_Fecha + "     " + ((data.rows.item(i).mov_Cantidad).toFixed(2)).toString().padEnd(210,"&nbsp;") + "<span onclick='navigator.notification.alert(\"" + data.rows.item(i).mov_Notas + "\")' class='material-icons tamano-icono-barra color-icono-barra'>insert_comment</span></li>");
@@ -341,11 +323,9 @@ function buscar() {
     $("#lstRegistros").empty();
     //contarRegistros();
     let stParcial = $("#txtBuscar").val();
-    db.transaction(function (transaction) {
-        transaction.executeSql(`SELECT * FROM tbl_Movimientos WHERE mov_Notas LIKE '%${stParcial}%' ORDER BY mov_Fecha DESC`, [], onSuccess, onError);
-    });
+    db.tbl_Movimientos.where("mov_Notas").contains(stParcial).toArray().then(onSuccess).catch(onError);
 
-    function onSuccess(transaction, data) {
+    function onSuccess(data) {
         if (data.rows.length > 0) {
             for (i = 0; i < data.rows.length; i++) {
                 $("#lstRegistros").append(`<li id='registro${i}'>` + arrConceptos[data.rows.item(i).mov_Concepto-1] + "<br />" + data.rows.item(i).mov_Fecha + "     " + ((data.rows.item(i).mov_Cantidad).toFixed(2)).toString().padEnd(210,"&nbsp;") + "<span onclick='navigator.notification.alert(\"" + data.rows.item(i).mov_Notas + "\")' class='material-icons tamano-icono-barra color-icono-barra'>insert_comment</span></li>");

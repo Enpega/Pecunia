@@ -25,35 +25,27 @@ cordova.define('cordova/plugin_list', function(require, exports, module) {
       ]
     },
     {
-      "id": "cordova-plugin-globalization.GlobalizationError",
-      "file": "plugins/cordova-plugin-globalization/www/GlobalizationError.js",
-      "pluginId": "cordova-plugin-globalization",
-      "clobbers": [
-        "window.GlobalizationError"
-      ]
-    },
-    {
-      "id": "cordova-plugin-globalization.globalization",
-      "file": "plugins/cordova-plugin-globalization/www/globalization.js",
-      "pluginId": "cordova-plugin-globalization",
-      "clobbers": [
-        "navigator.globalization"
-      ]
-    },
-    {
       "id": "cordova-plugin-splashscreen.SplashScreen",
       "file": "plugins/cordova-plugin-splashscreen/www/splashscreen.js",
       "pluginId": "cordova-plugin-splashscreen",
       "clobbers": [
         "navigator.splashscreen"
       ]
+    },
+    {
+      "id": "cordova-plugin-sqlite-2.sqlitePlugin",
+      "file": "plugins/cordova-plugin-sqlite-2/dist/sqlite-plugin.js",
+      "pluginId": "cordova-plugin-sqlite-2",
+      "clobbers": [
+        "sqlitePlugin"
+      ]
     }
   ];
   module.exports.metadata = {
     "cordova-plugin-device": "1.1.7",
     "cordova-plugin-dialogs": "1.3.4",
-    "cordova-plugin-globalization": "1.0.9",
+    "cordova-plugin-whitelist": "1.3.4",
     "cordova-plugin-splashscreen": "5.0.4",
-    "cordova-plugin-whitelist": "1.3.4"
+    "cordova-plugin-sqlite-2": "1.0.6"
   };
 });
