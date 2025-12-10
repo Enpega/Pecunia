@@ -25,7 +25,7 @@ body {
     -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
     -webkit-user-select: none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
     user-select: none; 
-    font-family: 'Questrial', sans-serif;
+    font-family: 'Nunito-Regular', sans-serif;
     font-size:22px;
 }
 
@@ -259,6 +259,7 @@ body {
     font-size: .8571em;
     line-height: 1.35em;
     border: none;
+    font-family: 'Nunito-Regular';
 }
 
 .boton-redondo {
