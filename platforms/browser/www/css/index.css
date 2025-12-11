@@ -24,22 +24,180 @@ body {
     -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
     -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
     -webkit-user-select: none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
-    font-family: 'Questrial', sans-serif;
+    user-select: none; 
+    font-family: 'Nunito-Regular', sans-serif;
     font-size:22px;
 }
 
-.body-oscuro {
+.body-color {
     background-color: #37474f /*{a-bar-background-color}*/;
 	border-color: #37474f /*{a-bar-border}*/;
 	color: #eceff1 /*{a-bar-color}*/;
+    /* secondary: #716dfd */
+    /* accent: #0600c2 */
 	/* font-weight: bold; */
 }
 
-.body-claro {
-	background-color: #e9e9e9 /*{b-bar-background-color}*/;
-	border-color: #dddddd /*{b-bar-border}*/;
-	color: #333333 /*{b-bar-color}*/;
-	/* font-weight: bold; */
+.color-icono-barra {
+    color: #37474f;
+}
+
+.form-control {
+    border: 1px solid #333333;
+    border-radius: 30px;
+    box-shadow: none;
+    font-size: 22px;
+    padding: 10px 18px 10px 18px;   
+     width: 60%;
+}
+
+.form-control-color {
+    background-color: #546e7a; 
+    color: #eceff1;
+    line-height: normal;
+}
+
+.form-control-derecha {
+    text-align: right;
+}
+
+.form-control-select {
+    padding: 6px 18px 6px 18px; 
+    width: 80% !important;
+}
+
+.form-control-aviso {
+    border-width: 2px;
+    border-color: yellow;
+}
+
+.form-control-nota {
+    width: 70% !important;
+}
+
+.boton-primario {
+    background-color: #8c9eff;
+    color: #37474f;
+}
+
+.boton-secundario {
+    color: #8c9eff;
+}
+
+
+.boton-rojo {
+    background-color: #8B0000; /*#C70000*/
+    color: #FFFFFF;
+}
+
+.boton-verde {
+    background-color: #008000; /*#3CF033*/
+    color: #FFFFFF;
+}
+
+.boton-azul {
+    background-color: #00008B; /*#007AD1*/
+    color: #FFFFFF;
+}
+
+.boton-amarillo {
+    background-color: #C77B00;
+    color: #FFFFFF;
+}
+
+.tarjeta-tipo {
+    border-left-width: 15px;
+    border-left-style: solid;
+    padding-left: 10px;
+    margin-bottom: 10px;
+    background-color: #546e7a;
+	color: #eceff1;
+}
+
+.registros {
+    color: #eceff1;
+}
+
+.slider {
+    background-color: #546e7a;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: #333333;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+@media (prefers-color-scheme: light) {
+    .body-color.claro {
+    	background-color: #b1c1c9 /*{b-bar-background-color}*/;
+    	border-color: #b1c1c9 /*{b-bar-border}*/;
+    	color: #001275 /*{b-bar-color}*/;
+        /* secondary: #070292 */
+        /* accent: #443dff */
+    	/* font-weight: bold; */
+    }
+    
+    .color-icono-barra.claro {
+        color: #001275;
+    }
+
+    .form-control-color.claro {
+        background-color: transparent;
+        color: #333333; 
+    }
+    
+    .boton-primario.claro {
+        background-color: #3388cc;
+        color: #FFFFFF;
+    }
+    
+    .boton-secundario.claro {
+        color: #37474f;
+    }
+    
+    .boton-rojo.claro {
+        background-color: #FF3636;
+        color: #FFFFFF;
+    }
+
+    .boton-verde.claro {
+        background-color: #18ce0f;
+        color: #FFFFFF;
+    }
+
+    .boton-azul.claro {
+        background-color: #2CA8FF;
+        color: #FFFFFF;
+    }
+
+    .boton-amarillo.claro {
+        background-color: #FFB236;
+        color: #FFFFFF;
+    }
+    
+    .tarjeta-tipo.claro {
+        border-left-width: 15px;
+        border-left-style: solid;
+        padding-left: 10px;
+        margin-bottom: 10px;
+        background-color: #e9e9e9;
+        color: #333333;
+    }
+
+    .registros.claro {
+        color: #333333;
+    }
+    
+    .slider.claro {
+        background-color: #eceff1;
+    }
 }
 
 #divGap {
@@ -96,48 +254,12 @@ body {
     font-size: 30px;
 }
 
-.color-icono-barra {
-    color: #37474f;
-}
-
-.form-control {
-    border: 1px solid #333333;
-    border-radius: 30px;
-    box-shadow: none;
-    font-size: 22px;
-    padding: 10px 18px 10px 18px;    
-}
-
-.form-control-derecha {
-    text-align: right;
-}
-
-.form-control-oscuro {
-    background-color: #546e7a; 
-    color: #eceff1;
-    line-height: normal;
-
-}
-
-.form-control-claro {
-    background-color: transparent;
-    color: #333333; 
-}
-
-.form-control-select {
-    padding: 6px 18px 6px 18px; 
-}
-
-.form-control-aviso {
-    border-width: 2px;
-    border-color: yellow;
-}
-
 .boton {
     font-weight: 400;
     font-size: .8571em;
     line-height: 1.35em;
     border: none;
+    font-family: 'Nunito-Regular';
 }
 
 .boton-redondo {
@@ -151,16 +273,6 @@ body {
     border-radius: 30px !important;
 }
 
-.boton-primario-oscuro {
-    background-color: #8c9eff;
-    color: #37474f;
-}
-
-.boton-primario-claro {
-    background-color: #3388cc;
-    color: #FFFFFF;
-}
-
 .boton-secundario {
     display: inline-block;
     text-align: center;
@@ -171,40 +283,12 @@ body {
     background-color: transparent;
 }
 
-.boton-secundario-oscuro {
-    color: #8c9eff;
-}
-
-.boton-secundario-claro {
-    color: #37474f;
-}
-
 .boton-tipo {
     display: inline-block;
     text-align: center;
     white-space: nowrap;
     vertical-align: middle;
     user-select: none;
-}
-
-.boton-rojo {
-    background-color: #FF3636;
-    color: #FFFFFF;
-}
-
-.boton-verde {
-    background-color: #18ce0f;
-    color: #FFFFFF;
-}
-
-.boton-azul {
-    background-color: #2CA8FF;
-    color: #FFFFFF;
-}
-
-.boton-amarillo {
-    background-color: #FFB236;
-    color: #FFFFFF;
 }
 
 .barra-superior {
@@ -265,31 +349,6 @@ body {
     margin-left: 5px;
 }
 
-.tarjeta-tipo {
-    border-left-width: 15px;
-    border-left-style: solid;
-    padding-left: 10px;
-    margin-bottom: 10px;
-}
-
-.tarjeta-tipo-oscuro {
-    background-color: #546e7a;
-	color: #eceff1;
-}
-
-.tarjeta-tipo-claro {
-    background-color: #e9e9e9;
-    color: #333333;
-}
-
-.registros-oscuro {
-    color: #eceff1;
-}
-
-.registros-claro {
-    color: #333333;
-}
-
 .switch {
     position: relative;
     display: inline-block;
@@ -310,26 +369,6 @@ body {
     left: 0;
     right: 0;
     bottom: 0;  
-    -webkit-transition: .4s;
-    transition: .4s;
-}
-
-.slider-oscuro {
-    background-color: #546e7a;
-}
-
-.slider-claro {
-    background-color: #eceff1;
-}
-
-.slider:before {
-    position: absolute;
-    content: "";
-    height: 26px;
-    width: 26px;
-    left: 4px;
-    bottom: 4px;
-    background-color: #333333;
     -webkit-transition: .4s;
     transition: .4s;
 }

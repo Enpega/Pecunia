@@ -284,62 +284,50 @@ function alerta(titulo,mensaje,color) {
 
 function consultar(inTipo) {
     $("#lstRegistros").empty();
-    //contarRegistros();
-    var inAcumulado = 0;
-    db.transaction(function (transaction) {
-        if (inTipo == 0) db.tbl_Movimientos.toArray().then(onSuccess).catch(onError);
-        else db.tbl_Movimientos.where("mov_Concepto").equals(inTipo).toArray().then(onSuccess).catch(onError);
-    });
-
-    function onSuccess(data) {
-        if (data.rows.length > 0) {
-            for (i = 0; i < data.rows.length; i++) {
-                $("#lstRegistros").append(`<li id='registro${i}'>` + arrConceptos[data.rows.item(i).mov_Concepto-1] + "<br />" + data.rows.item(i).mov_Fecha + "     " + ((data.rows.item(i).mov_Cantidad).toFixed(2)).toString().padEnd(210,"&nbsp;") + "<span onclick='navigator.notification.alert(\"" + data.rows.item(i).mov_Notas + "\")' class='material-icons tamano-icono-barra color-icono-barra'>insert_comment</span></li>");
-                $(`#registro${i}`).addClass("tarjeta-tipo tarjeta-tipo-oscuro");
-                $(`#registro${i}`).css("border-left-color",`${arrColores[data.rows.item(i).mov_Concepto-1]}`);
-                inAcumulado += data.rows.item(i).mov_Cantidad;
-                if (parseFloat(inAcumulado) > parseFloat(localStorage.AlarmaAcumulado)) {
-                    alerta("", "Se excedió el límite acumulado", "red")
-                }
-            };
-        }
-        else {
+    let inAcumulado = 0;
+    let inNumeroRegistros = 0;
+    if (inTipo == 0) db.tbl_Movimientos.toArray().then(onSuccess).catch(onError);
+    else db.tbl_Movimientos.where("mov_Concepto").equals(inTipo).toArray().then(onSuccess).catch(onError);
+        
+    function onSuccess(registros) {
+        if (registros.length == 0) {
             $(".empty-item").css("display", "block");
         }
-        contarRegistros();
+        else {
+            inNumeroRegistros = registros.length;
+            registros.forEach(function(registro) {
+                $("#lstRegistros").append(`<li id='registro${registro.mov_id}'>` /* + String(parseInt(registro.mov_Concepto)-1) + "<br />" */ + registro.mov_Fecha + "     " + ((parseFloat(registro.mov_Cantidad)).toFixed(2)).toString().padEnd(210,"&nbsp;") + "<span onclick='navigator.notification.alert(\"" + registro.mov_Notas + "\")' class='material-icons tamano-icono-barra color-icono-barra'>insert_comment</span></li>");
+                $(`#registro${registro.mov_id}`).addClass("tarjeta-tipo tarjeta-tipo-oscuro");
+                $(`#registro${registro.mov_id}`).css("border-left-color",`${arrColores[parseInt(registro.mov_Concepto)-1]}`);
+                inAcumulado += parseFloat(registro.mov_Cantidad);
+                if (parseFloat(inAcumulado) > parseFloat(localStorage.AlarmaAcumulado) && localStorage.Alarma == "true") {
+                    alerta("", "Se excedió el límite acumulado", "red");
+                }
+            });
+        }
+        contarRegistros(inNumeroRegistros);
     }
-
+    
     function onError(tx, error) {
         alerta("", "Ocurrió un error al leer la información", "red");
     }
 } //consultar
 
-function contarRegistros() {
-    var inCuentaLista = $("#lstRegistros li").length;
+function contarRegistros(inCuentaLista) {
     $("#sNumReg").html(inCuentaLista);
 } //contarRegistros
 
 function buscar() {
     $("#lstRegistros").empty();
-    //contarRegistros();
     let stParcial = $("#txtBuscar").val();
-    db.tbl_Movimientos.where("mov_Notas").contains(stParcial).toArray().then(onSuccess).catch(onError);
-
-    function onSuccess(data) {
-        if (data.rows.length > 0) {
-            for (i = 0; i < data.rows.length; i++) {
-                $("#lstRegistros").append(`<li id='registro${i}'>` + arrConceptos[data.rows.item(i).mov_Concepto-1] + "<br />" + data.rows.item(i).mov_Fecha + "     " + ((data.rows.item(i).mov_Cantidad).toFixed(2)).toString().padEnd(210,"&nbsp;") + "<span onclick='navigator.notification.alert(\"" + data.rows.item(i).mov_Notas + "\")' class='material-icons tamano-icono-barra color-icono-barra'>insert_comment</span></li>");
-                $(`#registro${i}`).addClass("tarjeta-tipo tarjeta-tipo-oscuro");
-                $(`#registro${i}`).css("border-left-color",`${arrColores[data.rows.item(i).mov_Concepto-1]}`);
-            };
-        }
-        else {
-            $(".empty-item").css("display", "block");
-        }
-        contarRegistros();
-    }
-
-    function onError(tx, error) {
-        alerta("", "Ocurrió un error al leer la información", "red");
-    }
+    let inNumeroRegistros = 0;
+    const registros = db.tbl_Movimientos
+        .filter(elemento => elemento.mov_Notas.includes(stParcial))
+        .each(registro => {
+            $("#lstRegistros").append(`<li id='registro${registro.mov_id}'>` + registro.mov_Concepto-1 + "<br />" + registro.mov_Fecha + "     " + ((registro.mov_Cantidad).toFixed(2)).toString().padEnd(210,"&nbsp;") + "<span onclick='navigator.notification.alert(\"" + registro.mov_Notas + "\")' class='material-icons tamano-icono-barra color-icono-barra'>insert_comment</span></li>");
+            $(`#registro${registro.mov_id}`).addClass("tarjeta-tipo tarjeta-tipo-oscuro");
+            $(`#registro${registro.mov_id}`).css("border-left-color",`${registro.mov_Concepto-1}`);
+            inNumeroRegistros += 1;
+        });
+    contarRegistros(inNumeroRegistros);
 } //buscar
