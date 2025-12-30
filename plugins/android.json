@@ -13,13 +13,13 @@
     "cordova-plugin-dialogs": {
       "PACKAGE_NAME": "com.ceodesarrollo.pecunia"
     },
-    "cordova-plugin-globalization": {
+    "cordova-plugin-whitelist": {
       "PACKAGE_NAME": "com.ceodesarrollo.pecunia"
     },
     "cordova-plugin-splashscreen": {
       "PACKAGE_NAME": "com.ceodesarrollo.pecunia"
     },
-    "cordova-plugin-whitelist": {
+    "cordova-plugin-sqlite-2": {
       "PACKAGE_NAME": "com.ceodesarrollo.pecunia"
     }
   },

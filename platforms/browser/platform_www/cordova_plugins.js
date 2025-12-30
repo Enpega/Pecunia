@@ -31,34 +31,6 @@ module.exports = [
         ]
     },
     {
-        "file": "plugins/cordova-plugin-globalization/www/GlobalizationError.js",
-        "id": "cordova-plugin-globalization.GlobalizationError",
-        "pluginId": "cordova-plugin-globalization",
-        "clobbers": [
-            "window.GlobalizationError"
-        ]
-    },
-    {
-        "file": "plugins/cordova-plugin-globalization/www/globalization.js",
-        "id": "cordova-plugin-globalization.globalization",
-        "pluginId": "cordova-plugin-globalization",
-        "clobbers": [
-            "navigator.globalization"
-        ]
-    },
-    {
-        "file": "plugins/cordova-plugin-globalization/www/browser/moment.js",
-        "id": "cordova-plugin-globalization.moment",
-        "pluginId": "cordova-plugin-globalization",
-        "runs": true
-    },
-    {
-        "file": "plugins/cordova-plugin-globalization/src/browser/GlobalizationProxy.js",
-        "id": "cordova-plugin-globalization.GlobalizationProxy",
-        "pluginId": "cordova-plugin-globalization",
-        "runs": true
-    },
-    {
         "file": "plugins/cordova-plugin-splashscreen/www/splashscreen.js",
         "id": "cordova-plugin-splashscreen.SplashScreen",
         "pluginId": "cordova-plugin-splashscreen",
@@ -71,6 +43,14 @@ module.exports = [
         "id": "cordova-plugin-splashscreen.SplashScreenProxy",
         "pluginId": "cordova-plugin-splashscreen",
         "runs": true
+    },
+    {
+        "file": "plugins/cordova-plugin-sqlite-2/dist/sqlite-plugin.js",
+        "id": "cordova-plugin-sqlite-2.sqlitePlugin",
+        "pluginId": "cordova-plugin-sqlite-2",
+        "clobbers": [
+            "sqlitePlugin"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -78,9 +58,9 @@ module.exports.metadata =
 {
     "cordova-plugin-device": "1.1.7",
     "cordova-plugin-dialogs": "1.3.4",
-    "cordova-plugin-globalization": "1.0.9",
     "cordova-plugin-whitelist": "1.3.4",
-    "cordova-plugin-splashscreen": "5.0.4"
+    "cordova-plugin-splashscreen": "5.0.4",
+    "cordova-plugin-sqlite-2": "1.0.6"
 }
 // BOTTOM OF METADATA
 });
