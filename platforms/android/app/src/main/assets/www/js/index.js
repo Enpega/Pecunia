@@ -83,19 +83,19 @@ var app = {
         });
 
         $("#btnEfectivo").on("click", function() {
-            consultar(1);
+            consultar("1");
         });
 
         $("#btnTarjeta").on("click", function() {
-            consultar(2);
+            consultar("2");
         });
 
         $("#btnAplicacion").on("click", function() {
-            consultar(3);
+            consultar("3");
         });
 
         $("#btnCheque").on("click", function() {
-            consultar(4);
+            consultar("4");
         });
 
         $("#txtBuscar").on("keyup", function() {
@@ -296,8 +296,12 @@ function consultar(inTipo) {
         else {
             inNumeroRegistros = registros.length;
             registros.forEach(function(registro) {
-                $("#lstRegistros").append(`<li id='registro${registro.mov_id}'>` /* + String(parseInt(registro.mov_Concepto)-1) + "<br />" */ + registro.mov_Fecha + "     " + ((parseFloat(registro.mov_Cantidad)).toFixed(2)).toString().padEnd(210,"&nbsp;") + "<span onclick='navigator.notification.alert(\"" + registro.mov_Notas + "\")' class='material-icons tamano-icono-barra color-icono-barra'>insert_comment</span></li>");
-                $(`#registro${registro.mov_id}`).addClass("tarjeta-tipo tarjeta-tipo-oscuro");
+                const cantidad = new Intl.NumberFormat('es-MX', {
+                    style: 'currency',
+                    currency: 'MXN',
+                });
+                $("#lstRegistros").append(`<li id='registro${registro.mov_id}'>` /* + String(parseInt(registro.mov_Concepto)-1) + "<br />" */ + registro.mov_Fecha + "     " + cantidad.format(registro.mov_Cantidad).padEnd(210,String.fromCharCode(160)) + "<span onclick='navigator.notification.alert(\"" + registro.mov_Notas + "\")' class='material-icons tamano-icono-barra color-icono-barra'>insert_comment</span></li>");
+                $(`#registro${registro.mov_id}`).addClass("tarjeta-tipo");
                 $(`#registro${registro.mov_id}`).css("border-left-color",`${arrColores[parseInt(registro.mov_Concepto)-1]}`);
                 inAcumulado += parseFloat(registro.mov_Cantidad);
                 if (parseFloat(inAcumulado) > parseFloat(localStorage.AlarmaAcumulado) && localStorage.Alarma == "true") {
@@ -322,11 +326,15 @@ function buscar() {
     let stParcial = $("#txtBuscar").val();
     let inNumeroRegistros = 0;
     const registros = db.tbl_Movimientos
-        .filter(elemento => elemento.mov_Notas.includes(stParcial))
+        .filter(elemento => elemento.mov_Notas.toLowerCase().includes(stParcial.toLowerCase()))
         .each(registro => {
-            $("#lstRegistros").append(`<li id='registro${registro.mov_id}'>` + registro.mov_Concepto-1 + "<br />" + registro.mov_Fecha + "     " + ((registro.mov_Cantidad).toFixed(2)).toString().padEnd(210,"&nbsp;") + "<span onclick='navigator.notification.alert(\"" + registro.mov_Notas + "\")' class='material-icons tamano-icono-barra color-icono-barra'>insert_comment</span></li>");
-            $(`#registro${registro.mov_id}`).addClass("tarjeta-tipo tarjeta-tipo-oscuro");
-            $(`#registro${registro.mov_id}`).css("border-left-color",`${registro.mov_Concepto-1}`);
+            const cantidad = new Intl.NumberFormat('es-MX', {
+                style: 'currency',
+                currency: 'MXN',
+            });
+            $("#lstRegistros").append(`<li id='registro${registro.mov_id}'>` + registro.mov_Fecha + "     " + cantidad.format(registro.mov_Cantidad).padEnd(210,String.fromCharCode(160)) + "<span onclick='navigator.notification.alert(\"" + registro.mov_Notas + "\")' class='material-icons tamano-icono-barra color-icono-barra'>insert_comment</span></li>");
+            $(`#registro${registro.mov_id}`).addClass("tarjeta-tipo");
+            $(`#registro${registro.mov_id}`).css("border-left-color",`${arrColores[parseInt(registro.mov_Concepto)-1]}`);
             inNumeroRegistros += 1;
         });
     contarRegistros(inNumeroRegistros);

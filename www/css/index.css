@@ -136,7 +136,7 @@ body {
 
 @media (prefers-color-scheme: light) {
     .body-color.claro {
-    	background-color: #b1c1c9 /*{b-bar-background-color}*/;
+    	background-color: white /*{b-bar-background-color}*/;
     	border-color: #b1c1c9 /*{b-bar-border}*/;
     	color: #001275 /*{b-bar-color}*/;
         /* secondary: #070292 */
@@ -144,45 +144,45 @@ body {
     	/* font-weight: bold; */
     }
     
-    .color-icono-barra.claro {
+    .color-icono-barra {
         color: #001275;
     }
 
-    .form-control-color.claro {
+    .form-control-color {
         background-color: transparent;
         color: #333333; 
     }
     
-    .boton-primario.claro {
+    .boton-primario {
         background-color: #3388cc;
         color: #FFFFFF;
     }
     
-    .boton-secundario.claro {
+    .boton-secundario {
         color: #37474f;
     }
     
-    .boton-rojo.claro {
+    .boton-rojo {
         background-color: #FF3636;
         color: #FFFFFF;
     }
 
-    .boton-verde.claro {
+    .boton-verde {
         background-color: #18ce0f;
         color: #FFFFFF;
     }
 
-    .boton-azul.claro {
+    .boton-azul {
         background-color: #2CA8FF;
         color: #FFFFFF;
     }
 
-    .boton-amarillo.claro {
+    .boton-amarillo {
         background-color: #FFB236;
         color: #FFFFFF;
     }
     
-    .tarjeta-tipo.claro {
+    .tarjeta-tipo {
         border-left-width: 15px;
         border-left-style: solid;
         padding-left: 10px;
@@ -191,11 +191,11 @@ body {
         color: #333333;
     }
 
-    .registros.claro {
+    .registros {
         color: #333333;
     }
     
-    .slider.claro {
+    .slider {
         background-color: #eceff1;
     }
 }
